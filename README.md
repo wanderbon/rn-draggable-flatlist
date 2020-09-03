@@ -14,16 +14,16 @@ To use swipeable list items in a DraggableFlatList see [React Native Swipeable I
 with `npm`:
 
 ```
-npm install --save react-native-draggable-flatlist
+npm install --save rn-draggable-flatlist
 ```
 
 with `yarn`:
 
 ```
-yarn add react-native-draggable-flatlist
+yarn add rn-draggable-flatlist
 ```
 
-3. `import DraggableFlatList from 'react-native-draggable-flatlist'`
+3. `import DraggableFlatList from 'rn-draggable-flatlist'`
 
 ## Api
 
