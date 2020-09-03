@@ -1,13 +1,12 @@
 {
   "name": "rn-draggable-flatlist",
-  "version": "2.3.6",
+  "version": "2.5.0",
   "description": "A drag-and-drop-enabled FlatList component for React Native",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
-    "install": "npm i && npm run build"
+    "build": "tsc"
   },
   "husky": {
     "hooks": {
