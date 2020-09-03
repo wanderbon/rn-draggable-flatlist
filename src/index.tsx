@@ -115,6 +115,7 @@ type Props<T> = Modify<
     onPlaceholderIndexChange?: (placeholderIndex: number) => void;
     dragItemOverflow?: boolean;
     hoverComponentStyle?: object;
+    containerStyles?: object;
   } & Partial<DefaultProps>
 >;
 
@@ -970,7 +971,8 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
       activationDistance,
       onScrollOffsetChange,
       renderPlaceholder,
-      onPlaceholderIndexChange
+      onPlaceholderIndexChange,
+      containerStyles
     } = this.props;
 
     const { hoverComponent } = this.state;
@@ -989,7 +991,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
         {...dynamicProps}
       >
         <Animated.View
-          style={styles.flex}
+          style={[styles.flex, containerStyles]}
           ref={this.containerRef}
           onLayout={this.onContainerLayout}
           onTouchEnd={this.onContainerTouchEnd}

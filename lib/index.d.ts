@@ -49,6 +49,7 @@ declare type Props<T> = Modify<
     onPlaceholderIndexChange?: (placeholderIndex: number) => void;
     dragItemOverflow?: boolean;
     hoverComponentStyle?: object;
+    containerStyles?: object;
   } & Partial<DefaultProps>
 >;
 declare type State = {
