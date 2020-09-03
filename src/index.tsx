@@ -114,6 +114,7 @@ type Props<T> = Modify<
     onScrollOffsetChange?: (scrollOffset: number) => void;
     onPlaceholderIndexChange?: (placeholderIndex: number) => void;
     dragItemOverflow?: boolean;
+    hoverComponentStyle?: object;
   } & Partial<DefaultProps>
 >;
 
@@ -823,14 +824,14 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
 
   renderHoverComponent = () => {
     const { hoverComponent } = this.state;
-    const { horizontal } = this.props;
+    const { horizontal, hoverComponentStyle } = this.props;
 
     return (
       <Animated.View
         style={[
           horizontal
-            ? styles.hoverComponentHorizontal
-            : styles.hoverComponentVertical,
+            ? hoverComponentStyle || styles.hoverComponentHorizontal
+            : hoverComponentStyle || styles.hoverComponentVertical,
           {
             opacity: this.hoverComponentOpacity,
             transform: [
