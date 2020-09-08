@@ -328,13 +328,13 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     const { hoverComponent: prevHoverComponent } = prevState;
 
     if (!prevHoverComponent && currentHoverComponent) {
-      this.generateTimingAnimation(true).start(() => {
+      this.generateTimingAnimation(1).start(() => {
         console.log("open end");
       });
     }
 
     if (prevHoverComponent && !currentHoverComponent) {
-      this.generateTimingAnimation(false).start(() => {
+      this.generateTimingAnimation(0).start(() => {
         console.log("close end");
       });
     }
@@ -382,10 +382,11 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     }
   };
 
-  generateTimingAnimation = (isActive: boolean) => {
+  generateTimingAnimation = (toValue: number) => {
+    console.log("toValue", toValue);
     return Animated.timing(this.scale, {
       duration: 500,
-      toValue: Number(isActive),
+      toValue,
       easing: Easing.bounce
     });
   };
