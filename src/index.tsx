@@ -323,6 +323,11 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
         this.activeCellSize.setValue(cellData.measurements.size);
       }
     }
+
+    const { hoverComponent: currentHoverComponent } = this.state;
+    const { hoverComponent: prevHoverComponent } = prevState;
+
+    console.log(prevHoverComponent, currentHoverComponent);
   };
 
   flushQueue = async () => {
