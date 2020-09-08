@@ -327,7 +327,17 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     const { hoverComponent: currentHoverComponent } = this.state;
     const { hoverComponent: prevHoverComponent } = prevState;
 
-    console.log(prevHoverComponent, currentHoverComponent);
+    if (!prevHoverComponent && currentHoverComponent) {
+      this.generateTimingAnimation(true).start(() => {
+        console.log("open end");
+      });
+    }
+
+    if (prevHoverComponent && !currentHoverComponent) {
+      this.generateTimingAnimation(false).start(() => {
+        console.log("close end");
+      });
+    }
   };
 
   flushQueue = async () => {
@@ -361,11 +371,6 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
           hoverComponent
         },
         () => {
-          //run spring
-          this.generateTimingAnimation(true).start(() => {
-            console.log("open end");
-          });
-
           const index = this.keyToIndex.get(activeKey);
           const { onDragBegin } = this.props;
 
@@ -386,10 +391,6 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   };
 
   onRelease = ([index]: readonly number[]) => {
-    this.generateTimingAnimation(false).start(() => {
-      console.log("close end");
-    });
-
     const { onRelease } = this.props;
     this.isPressedIn.js = false;
     onRelease && onRelease(index);
