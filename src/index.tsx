@@ -6,7 +6,9 @@ import {
   findNodeHandle,
   ViewStyle,
   FlatList as RNFlatList,
-  NativeScrollEvent
+  NativeScrollEvent,
+  Animated as RNAnimated,
+  Easing
 } from "react-native";
 import {
   PanGestureHandler,
@@ -15,7 +17,7 @@ import {
   GestureHandlerGestureEventNativeEvent,
   PanGestureHandlerEventExtra
 } from "react-native-gesture-handler";
-import Animated, { interpolate, Extrapolate } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 import { springFill, setupCell } from "./procs";
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
@@ -151,8 +153,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     hoverComponent: null
   };
 
-  scale = new Value<number>(1);
-  scaleClock = new Clock();
+  scale = new RNAnimated.Value(1);
 
   containerRef = React.createRef<Animated.View>();
   flatlistRef = React.createRef<AnimatedFlatListType<T>>();
@@ -357,7 +358,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
           const { onDragBegin } = this.props;
 
           //run spring
-          this.startAnimation(2, 1);
+          this._toggleAnimate(true);
 
           if (index !== undefined && onDragBegin) {
             onDragBegin(index);
@@ -367,29 +368,13 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     }
   };
 
-  startAnimation = (to: number, from: number) => {
-    const config = {
-      ...this.hoverAnimConfig,
-      toValue: new Value(to)
-    };
-
-    const state = {
-      position: new Value(from),
-      velocity: new Value(0),
-      time: new Value(0),
-      finished: new Value(0)
-    };
-
-    startClock(this.scaleClock);
-
-    const runSrping = cond(
-      clockRunning(this.scaleClock),
-      springFill(this.scaleClock, state, config)
-    );
-
-    set(this.scale, runSrping);
-
-    stopClock(this.scaleClock);
+  _toggleAnimate = (isActive: boolean) => {
+    RNAnimated.timing(this.scale, {
+      duration: 300,
+      toValue: Number(isActive),
+      easing: Easing.bounce,
+      useNativeDriver: true
+    }).start();
   };
 
   onRelease = ([index]: readonly number[]) => {
@@ -409,7 +394,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
       }
 
       //stop spring
-      this.startAnimation(1, 2);
+      this._toggleAnimate(false);
 
       onDragEnd({ from, to, data: newData });
     }
@@ -863,28 +848,40 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     const { horizontal, hoverComponentStyle } = this.props;
 
     return (
-      <Animated.View
-        style={[
-          horizontal
-            ? hoverComponentStyle || styles.hoverComponentHorizontal
-            : hoverComponentStyle || styles.hoverComponentVertical,
-          {
-            opacity: this.hoverComponentOpacity,
-            transform: [
-              {
-                [`translate${horizontal ? "X" : "Y"}`]: this
-                  .hoverComponentTranslate,
-                scale: cond(clockRunning(this.hoverClock), 1.1, 1)
-              }
-              // We need the cast because the transform array usually accepts
-              // only specific keys, and we dynamically generate the key
-              // above
-            ] as Animated.AnimatedTransform
-          }
-        ]}
+      <RNAnimated.View
+        style={{
+          transform: [
+            {
+              scale: this.scale.interpolate({
+                inputRange: [0, 1],
+                outputRange: [1, 1.1]
+              })
+            }
+          ]
+        }}
       >
-        {hoverComponent}
-      </Animated.View>
+        <Animated.View
+          style={[
+            horizontal
+              ? hoverComponentStyle || styles.hoverComponentHorizontal
+              : hoverComponentStyle || styles.hoverComponentVertical,
+            {
+              opacity: this.hoverComponentOpacity,
+              transform: [
+                {
+                  [`translate${horizontal ? "X" : "Y"}`]: this
+                    .hoverComponentTranslate
+                }
+                // We need the cast because the transform array usually accepts
+                // only specific keys, and we dynamically generate the key
+                // above
+              ] as Animated.AnimatedTransform
+            }
+          ]}
+        >
+          {hoverComponent}
+        </Animated.View>
+      </RNAnimated.View>
     );
   };
 

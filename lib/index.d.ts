@@ -1,5 +1,10 @@
 import React from "react";
-import { FlatListProps, ViewStyle, FlatList as RNFlatList } from "react-native";
+import {
+  FlatListProps,
+  ViewStyle,
+  FlatList as RNFlatList,
+  Animated as RNAnimated
+} from "react-native";
 import {
   PanGestureHandler,
   State as GestureState
@@ -70,8 +75,7 @@ declare type CellData = {
 };
 declare class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   state: State;
-  scale: Animated.Value<number>;
-  scaleClock: Animated.Clock;
+  scale: RNAnimated.Value;
   containerRef: React.RefObject<Animated.View>;
   flatlistRef: React.RefObject<AnimatedFlatListType<T>>;
   panGestureHandlerRef: React.RefObject<PanGestureHandler>;
@@ -385,7 +389,7 @@ declare class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   flushQueue: () => Promise<void>;
   resetHoverState: () => void;
   drag: (hoverComponent: React.ReactNode, activeKey: string) => void;
-  startAnimation: (to: number, from: number) => void;
+  _toggleAnimate: (isActive: boolean) => void;
   onRelease: ([index]: readonly number[]) => void;
   onDragEnd: ([from, to]: readonly number[]) => void;
   updateCellData: (data?: T[]) => void;
