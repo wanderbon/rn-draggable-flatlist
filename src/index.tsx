@@ -372,7 +372,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
 
   generateTimingAnimation = (isActive: boolean) => {
     return Animated.timing(this.scale, {
-      duration: 5000,
+      duration: 500,
       toValue: Number(isActive),
       easing: Easing.bounce
     });
@@ -385,6 +385,9 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   };
 
   onDragEnd = ([from, to]: readonly number[]) => {
+    // stop spring
+    this.generateTimingAnimation(false).start();
+
     const { onDragEnd } = this.props;
     if (onDragEnd) {
       const { data } = this.props;
@@ -393,10 +396,6 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
         newData.splice(from, 1);
         newData.splice(to, 0, data[from]);
       }
-
-      //stop spring
-      this.generateTimingAnimation(false).start();
-
       onDragEnd({ from, to, data: newData });
     }
 
