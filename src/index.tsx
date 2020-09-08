@@ -771,11 +771,11 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   ]);
 
   onGestureRelease = [
+    call([], this.endTimingAnimation),
     cond(
       this.isHovering,
       [
         set(this.disabled, 1),
-        call([], this.endTimingAnimation),
         cond(defined(this.hoverClock), [
           cond(clockRunning(this.hoverClock), stopClock(this.hoverClock)),
           set(this.hoverAnimState.position, this.hoverAnim),
