@@ -4,7 +4,7 @@ import {
   PanGestureHandler,
   State as GestureState
 } from "react-native-gesture-handler";
-import Animated from "react-native-reanimated";
+import Animated, { Clock } from "react-native-reanimated";
 declare const defaultProps: {
   autoscrollThreshold: number;
   autoscrollSpeed: number;
@@ -73,6 +73,7 @@ declare class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   containerRef: React.RefObject<Animated.View>;
   flatlistRef: React.RefObject<AnimatedFlatListType<T>>;
   panGestureHandlerRef: React.RefObject<PanGestureHandler>;
+  scale: Animated.Value<number>;
   containerSize: Animated.Value<number>;
   activationDistance: Animated.Value<number>;
   touchAbsolute: Animated.Value<number>;
@@ -100,7 +101,7 @@ declare class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   placeholderOffset: Animated.Value<0>;
   placeholderPos: Animated.Node<number>;
   hoverTo: Animated.Value<0>;
-  hoverClock: Animated.Clock;
+  hoverClock: Clock;
   hoverAnimState: {
     finished: Animated.Value<0>;
     velocity: Animated.Value<0>;
@@ -383,6 +384,7 @@ declare class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   flushQueue: () => Promise<void>;
   resetHoverState: () => void;
   drag: (hoverComponent: React.ReactNode, activeKey: string) => void;
+  startAnimation: (toValue: number) => void;
   onRelease: ([index]: readonly number[]) => void;
   onDragEnd: ([from, to]: readonly number[]) => void;
   updateCellData: (data?: T[]) => void;
