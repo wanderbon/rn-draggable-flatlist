@@ -156,6 +156,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   };
 
   scale = new Animated.Value<number>(0);
+  lastTimingAnimation = "";
 
   containerRef = React.createRef<Animated.View>();
   flatlistRef = React.createRef<AnimatedFlatListType<T>>();
@@ -370,21 +371,29 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   };
 
   startTimingAnimation = () => {
-    console.log("start timing");
-    Animated.timing(this.scale, {
-      duration: 500,
-      toValue: 1,
-      easing: Easing.bounce
-    }).start();
+    if (this.lastTimingAnimation !== "start") {
+      this.lastTimingAnimation = "start";
+      console.log("start timing");
+
+      Animated.timing(this.scale, {
+        duration: 500,
+        toValue: 1,
+        easing: Easing.bounce
+      }).start();
+    }
   };
 
   endTimingAnimation = () => {
-    console.log("end timing");
-    Animated.timing(this.scale, {
-      duration: 500,
-      toValue: 0,
-      easing: Easing.bounce
-    }).start();
+    if (this.lastTimingAnimation !== "end") {
+      this.lastTimingAnimation = "end";
+      console.log("end timing");
+
+      Animated.timing(this.scale, {
+        duration: 500,
+        toValue: 0,
+        easing: Easing.bounce
+      }).start();
+    }
   };
 
   onRelease = ([index]: readonly number[]) => {
