@@ -327,6 +327,8 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     const { hoverComponent: currentHoverComponent } = this.state;
     const { hoverComponent: prevHoverComponent } = prevState;
 
+    console.log(!!prevHoverComponent, !!currentHoverComponent);
+
     if (!prevHoverComponent && currentHoverComponent) {
       this.generateTimingAnimation(1).start(() => {
         console.log("open end");
