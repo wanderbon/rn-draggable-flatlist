@@ -874,11 +874,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
               {
                 [`translate${horizontal ? "X" : "Y"}`]: this
                   .hoverComponentTranslate,
-                scale: interpolate(this.scale, {
-                  inputRange: [1, 2],
-                  outputRange: [1, 1.1],
-                  extrapolate: Extrapolate.CLAMP
-                })
+                scale: cond(clockRunning(this.hoverClock), 1.1, 1)
               }
               // We need the cast because the transform array usually accepts
               // only specific keys, and we dynamically generate the key
@@ -1064,14 +1060,6 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
                     this.hoverClock,
                     this.hoverAnimState,
                     this.hoverAnimConfig
-                  ),
-                  set(
-                    this.scale,
-                    spring(
-                      this.hoverClock,
-                      this.hoverAnimState,
-                      this.hoverAnimConfig
-                    )
                   ),
                   cond(eq(this.hoverAnimState.finished, 1), [
                     stopClock(this.hoverClock),
