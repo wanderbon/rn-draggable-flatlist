@@ -70,6 +70,7 @@ declare type CellData = {
 };
 declare class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   state: State;
+  scale: Animated.Value<number>;
   containerRef: React.RefObject<Animated.View>;
   flatlistRef: React.RefObject<AnimatedFlatListType<T>>;
   panGestureHandlerRef: React.RefObject<PanGestureHandler>;
@@ -383,6 +384,7 @@ declare class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   flushQueue: () => Promise<void>;
   resetHoverState: () => void;
   drag: (hoverComponent: React.ReactNode, activeKey: string) => void;
+  startAnimation: (to: number, from: number) => void;
   onRelease: ([index]: readonly number[]) => void;
   onDragEnd: ([from, to]: readonly number[]) => void;
   updateCellData: (data?: T[]) => void;

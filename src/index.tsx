@@ -15,7 +15,7 @@ import {
   GestureHandlerGestureEventNativeEvent,
   PanGestureHandlerEventExtra
 } from "react-native-gesture-handler";
-import Animated from "react-native-reanimated";
+import Animated, { interpolate, Extrapolate } from "react-native-reanimated";
 import { springFill, setupCell } from "./procs";
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
@@ -150,6 +150,8 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     activeKey: null,
     hoverComponent: null
   };
+
+  scale = new Value<number>(1);
 
   containerRef = React.createRef<Animated.View>();
   flatlistRef = React.createRef<AnimatedFlatListType<T>>();
@@ -352,12 +354,39 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
         () => {
           const index = this.keyToIndex.get(activeKey);
           const { onDragBegin } = this.props;
+
+          //run spring
+          this.startAnimation(2, 1);
+
           if (index !== undefined && onDragBegin) {
             onDragBegin(index);
           }
         }
       );
     }
+  };
+
+  startAnimation = (to: number, from: number) => {
+    const clock = new Clock();
+
+    const config = {
+      ...this.hoverAnimConfig,
+      toValue: new Value(to)
+    };
+
+    const state = {
+      position: new Value(from),
+      velocity: new Value(0),
+      time: new Value(0),
+      finished: new Value(0)
+    };
+
+    const runSrping = cond(
+      clockRunning(clock),
+      springFill(clock, state, config)
+    );
+
+    set(this.scale, runSrping);
   };
 
   onRelease = ([index]: readonly number[]) => {
@@ -375,6 +404,9 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
         newData.splice(from, 1);
         newData.splice(to, 0, data[from]);
       }
+
+      //stop spring
+      this.startAnimation(1, 2);
 
       onDragEnd({ from, to, data: newData });
     }
@@ -838,7 +870,12 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
             transform: [
               {
                 [`translate${horizontal ? "X" : "Y"}`]: this
-                  .hoverComponentTranslate
+                  .hoverComponentTranslate,
+                scale: interpolate(this.scale, {
+                  inputRange: [1, 2],
+                  outputRange: [1, 1.1],
+                  extrapolate: Extrapolate.CLAMP
+                })
               }
               // We need the cast because the transform array usually accepts
               // only specific keys, and we dynamically generate the key
