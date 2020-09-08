@@ -15,7 +15,12 @@ import {
   GestureHandlerGestureEventNativeEvent,
   PanGestureHandlerEventExtra
 } from "react-native-gesture-handler";
-import Animated, { Easing, Clock } from "react-native-reanimated";
+import Animated, {
+  Easing,
+  Clock,
+  interpolate,
+  Extrapolate
+} from "react-native-reanimated";
 import { springFill, setupCell } from "./procs";
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
@@ -380,6 +385,8 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
           const index = this.keyToIndex.get(activeKey);
           const { onDragBegin } = this.props;
 
+          this.startAnimation(1, 2);
+
           if (index !== undefined && onDragBegin) {
             onDragBegin(index);
           }
@@ -388,10 +395,10 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     }
   };
 
-  startAnimation = (toValue: number) => {
+  startAnimation = (from: number, to: number) => {
     const clock = new Clock();
 
-    set(this.scale, runSpringAnimation(clock, 1, 2));
+    set(this.scale, runSpringAnimation(clock, from, to));
   };
 
   onRelease = ([index]: readonly number[]) => {
@@ -423,6 +430,8 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
         return this.measureCell(key);
       });
     }
+
+    this.startAnimation(2, 1);
 
     this.resetHoverState();
   };
@@ -872,7 +881,12 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
             transform: [
               {
                 [`translate${horizontal ? "X" : "Y"}`]: this
-                  .hoverComponentTranslate
+                  .hoverComponentTranslate,
+                scale: interpolate(this.scale, {
+                  inputRange: [1, 2],
+                  outputRange: [1, 1.1],
+                  extrapolate: Extrapolate.CLAMP
+                })
               }
               // We need the cast because the transform array usually accepts
               // only specific keys, and we dynamically generate the key
