@@ -348,25 +348,26 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
       // TODO: Put action on queue?
       console.log("## Can't set multiple active items");
     } else {
-      this.isPressedIn.js = true;
+      this.generateTimingAnimation(true).start(() => {
+        this.isPressedIn.js = true;
 
-      this.setState(
-        {
-          activeKey,
-          hoverComponent
-        },
-        () => {
-          const index = this.keyToIndex.get(activeKey);
-          const { onDragBegin } = this.props;
+        this.setState(
+          {
+            activeKey,
+            hoverComponent
+          },
+          () => {
+            const index = this.keyToIndex.get(activeKey);
+            const { onDragBegin } = this.props;
 
-          //run spring
-          this.generateTimingAnimation(true).start();
+            //run spring
 
-          if (index !== undefined && onDragBegin) {
-            onDragBegin(index);
+            if (index !== undefined && onDragBegin) {
+              onDragBegin(index);
+            }
           }
-        }
-      );
+        );
+      });
     }
   };
 
@@ -379,7 +380,6 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   };
 
   onRelease = ([index]: readonly number[]) => {
-    console.log("onRelease");
     this.generateTimingAnimation(false).start(() => {
       const { onRelease } = this.props;
       this.isPressedIn.js = false;
@@ -388,7 +388,6 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   };
 
   onDragEnd = ([from, to]: readonly number[]) => {
-    console.log("onDragEnd");
     const { onDragEnd } = this.props;
 
     if (onDragEnd) {
