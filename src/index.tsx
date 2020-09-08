@@ -332,6 +332,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   };
 
   resetHoverState = () => {
+    console.log("resetHoverState");
     this.activeIndex.setValue(-1);
     this.spacerIndex.setValue(-1);
     this.disabled.setValue(0);
@@ -385,7 +386,6 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   endTimingAnimation = () => {
     if (this.lastTimingAnimation !== "end") {
       this.lastTimingAnimation = "end";
-      console.log(this.isHovering);
 
       Animated.timing(this.scale, {
         duration: 500,
@@ -779,10 +779,10 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   ]);
 
   onGestureRelease = [
-    call([], this.endTimingAnimation),
     cond(
       this.isHovering,
       [
+        call([], this.endTimingAnimation),
         set(this.disabled, 1),
         cond(defined(this.hoverClock), [
           cond(clockRunning(this.hoverClock), stopClock(this.hoverClock)),
@@ -797,7 +797,10 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
           )
         ]
       ],
-      call([this.activeIndex], this.resetHoverState)
+      [
+        call([], this.endTimingAnimation),
+        call([this.activeIndex], this.resetHoverState)
+      ]
     )
   ];
 
