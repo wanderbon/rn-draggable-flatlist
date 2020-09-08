@@ -71,6 +71,7 @@ declare type CellData = {
 declare class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   state: State;
   scale: Animated.Value<number>;
+  scaleClock: Animated.Clock;
   containerRef: React.RefObject<Animated.View>;
   flatlistRef: React.RefObject<AnimatedFlatListType<T>>;
   panGestureHandlerRef: React.RefObject<PanGestureHandler>;

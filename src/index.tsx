@@ -152,6 +152,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   };
 
   scale = new Value<number>(1);
+  scaleClock = new Clock();
 
   containerRef = React.createRef<Animated.View>();
   flatlistRef = React.createRef<AnimatedFlatListType<T>>();
@@ -367,8 +368,6 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   };
 
   startAnimation = (to: number, from: number) => {
-    const clock = new Clock();
-
     const config = {
       ...this.hoverAnimConfig,
       toValue: new Value(to)
@@ -381,12 +380,16 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
       finished: new Value(0)
     };
 
+    startClock(this.scaleClock);
+
     const runSrping = cond(
-      clockRunning(clock),
-      springFill(clock, state, config)
+      clockRunning(this.scaleClock),
+      springFill(this.scaleClock, state, config)
     );
 
     set(this.scale, runSrping);
+
+    stopClock(this.scaleClock);
   };
 
   onRelease = ([index]: readonly number[]) => {
