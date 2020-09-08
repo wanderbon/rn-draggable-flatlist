@@ -6,9 +6,7 @@ import {
   findNodeHandle,
   ViewStyle,
   FlatList as RNFlatList,
-  NativeScrollEvent,
-  Animated as RNAnimated,
-  Easing
+  NativeScrollEvent
 } from "react-native";
 import {
   PanGestureHandler,
@@ -17,7 +15,11 @@ import {
   GestureHandlerGestureEventNativeEvent,
   PanGestureHandlerEventExtra
 } from "react-native-gesture-handler";
-import Animated from "react-native-reanimated";
+import Animated, {
+  interpolate,
+  Extrapolate,
+  Easing
+} from "react-native-reanimated";
 import { springFill, setupCell } from "./procs";
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
@@ -153,7 +155,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     hoverComponent: null
   };
 
-  scale = new RNAnimated.Value(1);
+  scale = new Animated.Value<number>(1);
 
   containerRef = React.createRef<Animated.View>();
   flatlistRef = React.createRef<AnimatedFlatListType<T>>();
@@ -369,11 +371,10 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   };
 
   _toggleAnimate = (isActive: boolean) => {
-    RNAnimated.timing(this.scale, {
+    Animated.timing(this.scale, {
       duration: 300,
       toValue: Number(isActive),
-      easing: Easing.bounce,
-      useNativeDriver: true
+      easing: Easing.bounce
     }).start();
   };
 
@@ -848,40 +849,32 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     const { horizontal, hoverComponentStyle } = this.props;
 
     return (
-      <RNAnimated.View
-        style={{
-          transform: [
-            {
-              scale: this.scale.interpolate({
-                inputRange: [0, 1],
-                outputRange: [1, 1.1]
-              })
-            }
-          ]
-        }}
+      <Animated.View
+        style={[
+          horizontal
+            ? hoverComponentStyle || styles.hoverComponentHorizontal
+            : hoverComponentStyle || styles.hoverComponentVertical,
+          {
+            opacity: this.hoverComponentOpacity,
+            transform: [
+              {
+                [`translate${horizontal ? "X" : "Y"}`]: this
+                  .hoverComponentTranslate,
+                scale: interpolate(this.scale, {
+                  inputRange: [0, 1],
+                  outputRange: [1, 1.1],
+                  extrapolate: Extrapolate.CLAMP
+                })
+              }
+              // We need the cast because the transform array usually accepts
+              // only specific keys, and we dynamically generate the key
+              // above
+            ] as Animated.AnimatedTransform
+          }
+        ]}
       >
-        <Animated.View
-          style={[
-            horizontal
-              ? hoverComponentStyle || styles.hoverComponentHorizontal
-              : hoverComponentStyle || styles.hoverComponentVertical,
-            {
-              opacity: this.hoverComponentOpacity,
-              transform: [
-                {
-                  [`translate${horizontal ? "X" : "Y"}`]: this
-                    .hoverComponentTranslate
-                }
-                // We need the cast because the transform array usually accepts
-                // only specific keys, and we dynamically generate the key
-                // above
-              ] as Animated.AnimatedTransform
-            }
-          ]}
-        >
-          {hoverComponent}
-        </Animated.View>
-      </RNAnimated.View>
+        {hoverComponent}
+      </Animated.View>
     );
   };
 

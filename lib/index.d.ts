@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  FlatListProps,
-  ViewStyle,
-  FlatList as RNFlatList,
-  Animated as RNAnimated
-} from "react-native";
+import { FlatListProps, ViewStyle, FlatList as RNFlatList } from "react-native";
 import {
   PanGestureHandler,
   State as GestureState
@@ -75,7 +70,7 @@ declare type CellData = {
 };
 declare class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   state: State;
-  scale: RNAnimated.Value;
+  scale: Animated.Value<number>;
   containerRef: React.RefObject<Animated.View>;
   flatlistRef: React.RefObject<AnimatedFlatListType<T>>;
   panGestureHandlerRef: React.RefObject<PanGestureHandler>;
