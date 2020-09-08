@@ -323,15 +323,6 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
         this.activeCellSize.setValue(cellData.measurements.size);
       }
     }
-
-    const { hoverComponent: currentHoverComponent } = this.state;
-    const { hoverComponent: prevHoverComponent } = prevState;
-
-    console.log(!!prevHoverComponent, !!currentHoverComponent);
-
-    if (!prevHoverComponent && currentHoverComponent) {
-      this.startTimingAnimation();
-    }
   };
 
   flushQueue = async () => {
@@ -368,6 +359,8 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
           const index = this.keyToIndex.get(activeKey);
           const { onDragBegin } = this.props;
 
+          this.startTimingAnimation();
+
           if (index !== undefined && onDragBegin) {
             onDragBegin(index);
           }
@@ -381,7 +374,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
       duration: 500,
       toValue: 1,
       easing: Easing.bounce
-    });
+    }).start();
   };
 
   endTimingAnimation = () => {
@@ -1062,11 +1055,9 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
                   cond(eq(this.hoverAnimState.finished, 1), [
                     stopClock(this.hoverClock),
                     call([], this.endTimingAnimation),
+                    call(this.moveEndParams, this.onDragEnd),
                     this.resetHoverSpring,
                     set(this.hasMoved, 0)
-                  ]),
-                  cond(eq(this.scale, 0), [
-                    call(this.moveEndParams, this.onDragEnd)
                   ])
                 ])
               ])
