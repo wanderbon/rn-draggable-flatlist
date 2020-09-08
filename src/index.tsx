@@ -775,6 +775,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
       this.isHovering,
       [
         set(this.disabled, 1),
+        call([], this.endTimingAnimation),
         cond(defined(this.hoverClock), [
           cond(clockRunning(this.hoverClock), stopClock(this.hoverClock)),
           set(this.hoverAnimState.position, this.hoverAnim),
@@ -1056,7 +1057,6 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
                   ),
                   cond(eq(this.hoverAnimState.finished, 1), [
                     stopClock(this.hoverClock),
-                    call([], this.endTimingAnimation),
                     call(this.moveEndParams, this.onDragEnd),
                     this.resetHoverSpring,
                     set(this.hasMoved, 0)
