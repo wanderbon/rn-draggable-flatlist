@@ -386,31 +386,33 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
 
   onDragEnd = ([from, to]: readonly number[]) => {
     // stop spring
-    this.generateTimingAnimation(false).start();
+    this.generateTimingAnimation(false).start(() => {
+      const { onDragEnd } = this.props;
 
-    const { onDragEnd } = this.props;
-    if (onDragEnd) {
-      const { data } = this.props;
-      let newData = [...data];
-      if (from !== to) {
-        newData.splice(from, 1);
-        newData.splice(to, 0, data[from]);
+      if (onDragEnd) {
+        const { data } = this.props;
+        let newData = [...data];
+        if (from !== to) {
+          newData.splice(from, 1);
+          newData.splice(to, 0, data[from]);
+        }
+        onDragEnd({ from, to, data: newData });
       }
-      onDragEnd({ from, to, data: newData });
-    }
 
-    const lo = Math.min(from, to) - 1;
-    const hi = Math.max(from, to) + 1;
-    for (let i = lo; i < hi; i++) {
-      this.queue.push(() => {
-        const item = this.props.data[i];
-        if (!item) return;
-        const key = this.keyExtractor(item, i);
-        return this.measureCell(key);
-      });
-    }
+      const lo = Math.min(from, to) - 1;
+      const hi = Math.max(from, to) + 1;
 
-    this.resetHoverState();
+      for (let i = lo; i < hi; i++) {
+        this.queue.push(() => {
+          const item = this.props.data[i];
+          if (!item) return;
+          const key = this.keyExtractor(item, i);
+          return this.measureCell(key);
+        });
+      }
+
+      this.resetHoverState();
+    });
   };
 
   updateCellData = (data: T[] = []) =>
