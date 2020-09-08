@@ -15,7 +15,7 @@ import {
   GestureHandlerGestureEventNativeEvent,
   PanGestureHandlerEventExtra
 } from "react-native-gesture-handler";
-import Animated, { Easing, Clock } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 import { springFill, setupCell } from "./procs";
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
@@ -40,6 +40,7 @@ const {
   greaterOrEq,
   lessOrEq,
   not,
+  Clock,
   clockRunning,
   startClock,
   stopClock,
@@ -47,34 +48,8 @@ const {
   defined,
   min,
   max,
-  debug,
-  timing
+  debug
 } = Animated;
-
-const runSpringAnimation = (clock: any, from: number, to: number) => {
-  const state = {
-    finished: new Value(0),
-    position: new Value(from),
-    time: new Value(0),
-    frameTime: new Value(0)
-  };
-
-  const config = {
-    duration: 100,
-    toValue: new Value(to),
-    easing: Easing.inOut(Easing.ease)
-  };
-
-  return block([
-    cond(clockRunning(clock), [], startClock(clock)),
-    // we run the step here that is going to update position
-    timing(clock, state, config),
-    // if the animation is over we stop the clock
-    cond(state.finished, debug("stop clock", stopClock(clock))),
-    // we made the block return the updated position
-    state.position
-  ]);
-};
 
 // Fire onScrollComplete when within this many
 // px of target offset
@@ -179,8 +154,6 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   containerRef = React.createRef<Animated.View>();
   flatlistRef = React.createRef<AnimatedFlatListType<T>>();
   panGestureHandlerRef = React.createRef<PanGestureHandler>();
-
-  scale = new Value<number>(1);
 
   containerSize = new Value<number>(0);
 
@@ -379,19 +352,12 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
         () => {
           const index = this.keyToIndex.get(activeKey);
           const { onDragBegin } = this.props;
-
           if (index !== undefined && onDragBegin) {
             onDragBegin(index);
           }
         }
       );
     }
-  };
-
-  startAnimation = (toValue: number) => {
-    const clock = new Clock();
-
-    set(this.scale, runSpringAnimation(clock, 1, 2));
   };
 
   onRelease = ([index]: readonly number[]) => {
