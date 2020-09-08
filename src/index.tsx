@@ -330,9 +330,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     console.log(!!prevHoverComponent, !!currentHoverComponent);
 
     if (!prevHoverComponent && currentHoverComponent) {
-      this.generateTimingAnimation(1).start(() => {
-        console.log("open end");
-      });
+      this.startTimingAnimation();
     }
   };
 
@@ -342,17 +340,15 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   };
 
   resetHoverState = () => {
-    this.generateTimingAnimation(0).start(() => {
-      this.activeIndex.setValue(-1);
-      this.spacerIndex.setValue(-1);
-      this.disabled.setValue(0);
-      if (this.state.hoverComponent !== null || this.state.activeKey !== null) {
-        this.setState({
-          hoverComponent: null,
-          activeKey: null
-        });
-      }
-    });
+    this.activeIndex.setValue(-1);
+    this.spacerIndex.setValue(-1);
+    this.disabled.setValue(0);
+    if (this.state.hoverComponent !== null || this.state.activeKey !== null) {
+      this.setState({
+        hoverComponent: null,
+        activeKey: null
+      });
+    }
   };
 
   drag = (hoverComponent: React.ReactNode, activeKey: string) => {
@@ -380,13 +376,20 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     }
   };
 
-  generateTimingAnimation = (toValue: number) => {
-    console.log("toValue", toValue);
-    return Animated.timing(this.scale, {
+  startTimingAnimation = () => {
+    Animated.timing(this.scale, {
       duration: 500,
-      toValue,
+      toValue: 1,
       easing: Easing.bounce
     });
+  };
+
+  endTimingAnimation = () => {
+    Animated.timing(this.scale, {
+      duration: 500,
+      toValue: 0,
+      easing: Easing.bounce
+    }).start();
   };
 
   onRelease = ([index]: readonly number[]) => {
@@ -1058,9 +1061,12 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
                   ),
                   cond(eq(this.hoverAnimState.finished, 1), [
                     stopClock(this.hoverClock),
-                    call(this.moveEndParams, this.onDragEnd),
+                    call([], this.endTimingAnimation),
                     this.resetHoverSpring,
                     set(this.hasMoved, 0)
+                  ]),
+                  cond(eq(this.scale, 0), [
+                    call(this.moveEndParams, this.onDragEnd)
                   ])
                 ])
               ])
