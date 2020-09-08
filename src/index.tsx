@@ -373,7 +373,6 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   startTimingAnimation = () => {
     if (this.lastTimingAnimation !== "start") {
       this.lastTimingAnimation = "start";
-      console.log("start timing");
 
       Animated.timing(this.scale, {
         duration: 500,
@@ -386,7 +385,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   endTimingAnimation = () => {
     if (this.lastTimingAnimation !== "end") {
       this.lastTimingAnimation = "end";
-      console.log("end timing");
+      console.log(this.isHovering);
 
       Animated.timing(this.scale, {
         duration: 500,
