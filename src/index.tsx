@@ -360,7 +360,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
           const { onDragBegin } = this.props;
 
           //run spring
-          this._toggleAnimate(true);
+          this.generateTimingAnimation(true).start();
 
           if (index !== undefined && onDragBegin) {
             onDragBegin(index);
@@ -370,12 +370,12 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     }
   };
 
-  _toggleAnimate = (isActive: boolean) => {
-    Animated.timing(this.scale, {
-      duration: 300,
+  generateTimingAnimation = (isActive: boolean) => {
+    return Animated.timing(this.scale, {
+      duration: 5000,
       toValue: Number(isActive),
       easing: Easing.bounce
-    }).start();
+    });
   };
 
   onRelease = ([index]: readonly number[]) => {
@@ -395,7 +395,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
       }
 
       //stop spring
-      this._toggleAnimate(false);
+      this.generateTimingAnimation(false).start();
 
       onDragEnd({ from, to, data: newData });
     }
@@ -862,7 +862,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
                   .hoverComponentTranslate,
                 scale: interpolate(this.scale, {
                   inputRange: [0, 1],
-                  outputRange: [1, 1.1],
+                  outputRange: [1, 1.05],
                   extrapolate: Extrapolate.CLAMP
                 })
               }

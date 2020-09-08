@@ -384,7 +384,9 @@ declare class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   flushQueue: () => Promise<void>;
   resetHoverState: () => void;
   drag: (hoverComponent: React.ReactNode, activeKey: string) => void;
-  _toggleAnimate: (isActive: boolean) => void;
+  generateTimingAnimation: (
+    isActive: boolean
+  ) => Animated.BackwardCompatibleWrapper;
   onRelease: ([index]: readonly number[]) => void;
   onDragEnd: ([from, to]: readonly number[]) => void;
   updateCellData: (data?: T[]) => void;
