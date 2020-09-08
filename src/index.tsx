@@ -348,11 +348,11 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
       // TODO: Put action on queue?
       console.log("## Can't set multiple active items");
     } else {
+      this.isPressedIn.js = true;
+
       this.generateTimingAnimation(true).start(() => {
         console.log("open end");
       });
-
-      this.isPressedIn.js = true;
 
       this.setState(
         {
