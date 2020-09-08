@@ -350,20 +350,19 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     } else {
       this.isPressedIn.js = true;
 
-      this.generateTimingAnimation(true).start(() => {
-        console.log("open end");
-      });
-
       this.setState(
         {
           activeKey,
           hoverComponent
         },
         () => {
+          //run spring
+          this.generateTimingAnimation(true).start(() => {
+            console.log("open end");
+          });
+
           const index = this.keyToIndex.get(activeKey);
           const { onDragBegin } = this.props;
-
-          //run spring
 
           if (index !== undefined && onDragBegin) {
             onDragBegin(index);
