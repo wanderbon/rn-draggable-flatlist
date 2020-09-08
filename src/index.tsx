@@ -379,6 +379,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   };
 
   onRelease = ([index]: readonly number[]) => {
+    console.log("release");
     const { onRelease } = this.props;
     this.isPressedIn.js = false;
     onRelease && onRelease(index);
