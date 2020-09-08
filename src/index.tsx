@@ -379,6 +379,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   };
 
   onRelease = ([index]: readonly number[]) => {
+    console.log("onRelease");
     this.generateTimingAnimation(false).start(() => {
       const { onRelease } = this.props;
       this.isPressedIn.js = false;
@@ -387,6 +388,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   };
 
   onDragEnd = ([from, to]: readonly number[]) => {
+    console.log("onDragEnd");
     const { onDragEnd } = this.props;
 
     if (onDragEnd) {
@@ -862,13 +864,9 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
                   .hoverComponentTranslate,
                 scale: interpolate(this.scale, {
                   inputRange: [0, 1],
-                  outputRange: [1, 1.05],
-                  extrapolate: Extrapolate.CLAMP
+                  outputRange: [1, 1.05]
                 })
               }
-              // We need the cast because the transform array usually accepts
-              // only specific keys, and we dynamically generate the key
-              // above
             ] as Animated.AnimatedTransform
           }
         ]}
