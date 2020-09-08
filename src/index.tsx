@@ -155,7 +155,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     hoverComponent: null
   };
 
-  scale = new Animated.Value<number>(1);
+  scale = new Animated.Value<number>(0);
 
   containerRef = React.createRef<Animated.View>();
   flatlistRef = React.createRef<AnimatedFlatListType<T>>();
