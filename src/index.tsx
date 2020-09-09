@@ -707,7 +707,8 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
           distFromBottom,
           scrollOffset,
           isScrolledUp,
-          isScrolledDown
+          isScrolledDown,
+          spacerIndex
         ] = curParams;
 
         const targetOffset = this.getScrollTargetOffset(
@@ -729,7 +730,8 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
           targetOffset >= 0 &&
           this.isPressedIn.js &&
           !scrollingUpAtTop &&
-          !scrollingDownAtBottom;
+          !scrollingDownAtBottom &&
+          !!spacerIndex;
 
         if (shouldScroll) {
           curParams = await this.scrollToAsync(targetOffset);
@@ -752,7 +754,8 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     this.distToBottomEdge,
     this.scrollOffset,
     this.isScrolledUp,
-    this.isScrolledDown
+    this.isScrolledDown,
+    this.spacerIndex
   ];
 
   checkAutoscroll = cond(
