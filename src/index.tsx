@@ -328,8 +328,8 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     if (!prevState.activeKey && this.state.activeKey) {
       const index = this.keyToIndex.get(this.state.activeKey);
       if (index !== undefined) {
-        this.spacerIndex.setValue(index);
-        this.activeIndex.setValue(index);
+        this.spacerIndex.setValue(index || 1);
+        this.activeIndex.setValue(index || 1);
         this.touchCellOffset.setValue(0);
         this.isPressedIn.native.setValue(1);
       }
