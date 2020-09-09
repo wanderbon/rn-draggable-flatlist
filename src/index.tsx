@@ -988,7 +988,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     };
 
     return (
-      <Animated.View>
+      <Animated.View style={style}>
         {renderPlaceholder({ item: activeItem, index: activeIndex })}
       </Animated.View>
     );
@@ -1010,7 +1010,10 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     }
     const isActiveCell = activeKey === key;
     return (
-      <Animated.View onLayout={onLayout} style={style}>
+      <Animated.View
+        onLayout={onLayout}
+        style={[style, { borderWidth: 1, borderColor: "red" }]}
+      >
         <Animated.View
           pointerEvents={activeKey ? "none" : "auto"}
           style={{
