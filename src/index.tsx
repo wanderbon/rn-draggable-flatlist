@@ -27,7 +27,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { springFill, setupCell } from "./procs";
 
-const { height } = Dimensions.get("screen");
+const { height, width } = Dimensions.get("screen");
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
@@ -649,9 +649,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
       this.isAutoscrolling.native.setValue(1);
       this.isAutoscrolling.js = true;
 
-      cond(eq(this.spacerIndex, -1), [call([new Value("yes")], console.log)]);
-
-      if (this.spacerIndex !== new Value(-1)) {
+      if (offset > width) {
         this.scroll({ offset });
       }
     });
