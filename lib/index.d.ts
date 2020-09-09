@@ -412,7 +412,7 @@ declare class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   resolveAutoscroll?: (scrollParams: readonly number[]) => void;
   onAutoscrollComplete: (params: readonly number[]) => void;
   scrollToAsync: (offset: number) => Promise<readonly number[]>;
-  scroll: (args: readonly number[]) => void;
+  scroll: ({ offset }: { offset: number }) => void;
   getScrollTargetOffset: (
     distFromTop: number,
     distFromBottom: number,
