@@ -856,7 +856,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
             cond(not(this.hasMoved), set(this.hasMoved, 1)),
             set(
               this.touchAbsolute,
-              add(this.props.horizontal ? 0 : y, this.activationDistance)
+              add(this.props.horizontal ? x : y, this.activationDistance)
             )
           ]
         )
