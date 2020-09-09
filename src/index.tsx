@@ -651,14 +651,11 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
 
       const { activeKey } = this.state;
       const data = this.cellData.get(activeKey || "");
+      const cellSize = data?.measurements?.size;
 
-      if (data) {
-        console.log(data);
+      if (cellSize && offset >= cellSize) {
+        this.scroll(offset);
       }
-
-      // if(offset >= this.activeCellSize) {
-      this.scroll(offset);
-      // }
     });
 
   scroll = (offset: number) => {
@@ -1121,14 +1118,6 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
                     this.resetHoverSpring,
                     set(this.hasMoved, 0)
                   ])
-                ]),
-                onChange(this.hoverComponentTranslate, [
-                  call([this.hoverComponentTranslate], console.log),
-                  call([new Value("---------- TRANSLATE")], console.log)
-                ]),
-                onChange(this.hoverTo, [
-                  call([this.hoverTo], console.log),
-                  call([new Value("---------- HOVER")], console.log)
                 ])
               ])
             }
