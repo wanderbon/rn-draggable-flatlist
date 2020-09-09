@@ -418,8 +418,6 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   onDragEnd = ([from, to]: readonly number[]) => {
     const { onDragEnd } = this.props;
 
-    to = !to ? 1 : to;
-
     if (onDragEnd) {
       const { data } = this.props;
       let newData = [...data];
