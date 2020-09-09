@@ -653,16 +653,16 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
 
       // const stopOffset =
 
-      console.log(cellSize, offset, offset >= (cellSize || 0) / 2);
+      // console.log(cellSize, offset, offset >= (cellSize || 0) / 2);
 
-      if (cellSize && offset >= cellSize / 2) {
-        this.resolveAutoscroll = resolve;
-        this.targetScrollOffset.setValue(offset);
-        this.isAutoscrolling.native.setValue(1);
-        this.isAutoscrolling.js = true;
+      // if (cellSize && offset >= cellSize / 2) {
+      this.resolveAutoscroll = resolve;
+      this.targetScrollOffset.setValue(offset);
+      this.isAutoscrolling.native.setValue(1);
+      this.isAutoscrolling.js = true;
 
-        this.scroll(offset);
-      }
+      this.scroll(offset);
+      // }
     });
 
   scroll = (offset: number) => {
@@ -784,9 +784,15 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     {
       nativeEvent: ({ contentOffset }: NativeScrollEvent) =>
         block([
-          set(
-            this.scrollOffset,
-            this.props.horizontal ? contentOffset.x : contentOffset.y
+          cond(
+            greaterOrEq(
+              contentOffset[this.props.horizontal ? "x" : "y"],
+              this.activeCellSize
+            ),
+            set(
+              this.scrollOffset,
+              this.props.horizontal ? contentOffset.x : contentOffset.y
+            )
           ),
           cond(
             and(
