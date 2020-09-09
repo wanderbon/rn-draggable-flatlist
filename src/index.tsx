@@ -1257,12 +1257,12 @@ class RowItem<T> extends React.PureComponent<RowItemProps<T>> {
       >
         <PanGestureHandler
           minDeltaY={50}
-          onGestureEvent={Animated.event(
+          onGestureEvent={RNAnimated.event(
             [
               {
                 nativeEvent: {
-                  translationX: new Animated.Value(0),
-                  translationY: index ? this._dragY : new Animated.Value(0)
+                  translationX: new RNAnimated.Value(0),
+                  translationY: index ? this._dragY : new RNAnimated.Value(0)
                 }
               }
             ],
