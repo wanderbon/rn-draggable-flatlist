@@ -170,6 +170,8 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     hoverComponent: null
   };
 
+  canScroll: boolean = false;
+
   scale = new Animated.Value<number>(0);
   lastTimingAnimation = "";
 
@@ -649,18 +651,17 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
       this.isAutoscrolling.native.setValue(1);
       this.isAutoscrolling.js = true;
 
-      // @ts-ignore: Unreachable code error for __getValue
-      console.log("activeIndex", this.activeIndex.__getValue());
-      // @ts-ignore: Unreachable code error for __getValue
-      console.log("activeCellSize", this.activeCellSize.__getValue());
-      // @ts-ignore: Unreachable code error for __getValue
-      console.log("isHovering", this.isHovering.__getValue());
-
-      this.scroll(offset);
+      if (this.canScroll) {
+        this.scroll(offset);
+      }
     });
 
-  notScroll = (args: readonly number[]) => {
-    console.log("this.spacerIndex = -1", args);
+  activateScroll = (args: readonly number[]) => {
+    this.canScroll = true;
+  };
+
+  unactivateScroll = (args: readonly number[]) => {
+    this.canScroll = false;
   };
 
   scroll = (offset: number) => {
@@ -1121,8 +1122,9 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
                 onChange(
                   this.spacerIndex,
                   cond(
-                    neq(this.spacerIndex, -1),
-                    call([this.spacerIndex], this.notScroll)
+                    or(eq(this.spacerIndex, 1), eq(this.spacerIndex, -1)),
+                    call([], this.activateScroll),
+                    call([], this.unactivateScroll)
                   )
                 )
               ])
