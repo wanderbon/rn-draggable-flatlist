@@ -657,10 +657,12 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     });
 
   activateScroll = (args: readonly number[]) => {
+    console.log("activateScroll", args[0]);
     this.canScroll = true;
   };
 
   unactivateScroll = (args: readonly number[]) => {
+    console.log("unactivateScroll", args[0]);
     this.canScroll = false;
   };
 
@@ -1123,8 +1125,8 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
                   this.spacerIndex,
                   cond(
                     or(eq(this.spacerIndex, 1), eq(this.spacerIndex, -1)),
-                    call([], this.activateScroll),
-                    call([], this.unactivateScroll)
+                    call([this.spacerIndex], this.activateScroll),
+                    call([this.spacerIndex], this.unactivateScroll)
                   )
                 )
               ])
