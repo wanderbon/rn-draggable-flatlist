@@ -917,8 +917,6 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
       onUnmount: () => console.log("## error, no cellData")
     };
 
-    const isActiveRow = index === this.keyToIndex.get(key);
-
     return (
       <RowItem
         extraData={this.props.extraData}
@@ -929,11 +927,11 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
         drag={this.drag}
         onUnmount={onUnmount}
         horizontal={horizontal}
-        isActiveRow={isActiveRow}
         itemProp={item}
         deleteItem={deleteItem}
         localization={localization}
         screenHeight={screenHeight}
+        draggablePanRef={this.panGestureHandlerRef}
       />
     );
   };
@@ -1130,11 +1128,11 @@ type RowItemProps<T> = {
   itemKey: string;
   onUnmount: () => void;
   horizontal?: boolean | false;
-  isActiveRow: boolean;
   deleteItem: (key: string) => void;
   itemProp: any;
   localization: any;
   screenHeight: number;
+  draggablePanRef: React.RefObject<PanGestureHandler>;
 };
 
 class RowItem<T> extends React.PureComponent<RowItemProps<T>> {
@@ -1226,7 +1224,7 @@ class RowItem<T> extends React.PureComponent<RowItemProps<T>> {
       keyToIndex,
       itemKey,
       horizontal,
-      isActiveRow
+      draggablePanRef
     } = this.props;
 
     const index = keyToIndex.get(itemKey);
@@ -1268,6 +1266,7 @@ class RowItem<T> extends React.PureComponent<RowItemProps<T>> {
             }
           )}
           onHandlerStateChange={this._onPanStateChange}
+          simultaneousHandlers={[draggablePanRef]}
         >
           <RNAnimated.View
             style={[
