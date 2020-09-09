@@ -96,6 +96,7 @@ export type RenderItemParams<T> = {
   index?: number; // This is technically a "last known index" since cells don't necessarily rerender when their index changes
   drag: () => void;
   isActive: boolean;
+  draggablePanRef: React.RefObject<PanGestureHandler>;
 };
 
 type Modify<T, R> = Omit<T, keyof R> & R;
@@ -906,6 +907,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
         item={item}
         drag={this.drag}
         onUnmount={onUnmount}
+        draggablePanRef={this.panGestureHandlerRef}
       />
     );
   };
@@ -1101,17 +1103,28 @@ type RowItemProps<T> = {
   renderItem: (params: RenderItemParams<T>) => React.ReactNode;
   itemKey: string;
   onUnmount: () => void;
+  draggablePanRef: React.RefObject<PanGestureHandler>;
 };
 
 class RowItem<T> extends React.PureComponent<RowItemProps<T>> {
   drag = () => {
-    const { drag, renderItem, item, keyToIndex, itemKey } = this.props;
+    const {
+      drag,
+      renderItem,
+      item,
+      keyToIndex,
+      itemKey,
+      draggablePanRef
+    } = this.props;
     const hoverComponent = renderItem({
       isActive: true,
       item,
       index: keyToIndex.get(itemKey),
-      drag: () => console.log("## attempt to call drag() on hovering component")
+      drag: () =>
+        console.log("## attempt to call drag() on hovering component"),
+      draggablePanRef: draggablePanRef
     });
+
     drag(hoverComponent, itemKey);
   };
 
@@ -1120,12 +1133,19 @@ class RowItem<T> extends React.PureComponent<RowItemProps<T>> {
   }
 
   render() {
-    const { renderItem, item, keyToIndex, itemKey } = this.props;
+    const {
+      renderItem,
+      item,
+      keyToIndex,
+      itemKey,
+      draggablePanRef
+    } = this.props;
     return renderItem({
       isActive: false,
       item,
       index: keyToIndex.get(itemKey),
-      drag: this.drag
+      drag: this.drag,
+      draggablePanRef: draggablePanRef
     });
   }
 }

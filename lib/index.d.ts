@@ -27,6 +27,7 @@ export declare type RenderItemParams<T> = {
   index?: number;
   drag: () => void;
   isActive: boolean;
+  draggablePanRef: React.RefObject<PanGestureHandler>;
 };
 declare type Modify<T, R> = Omit<T, keyof R> & R;
 declare type Props<T> = Modify<
