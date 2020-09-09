@@ -170,6 +170,8 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     hoverComponent: null
   };
 
+  offset: number = 0;
+
   scale = new Animated.Value<number>(0);
   lastTimingAnimation = "";
 
@@ -649,17 +651,28 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
       this.isAutoscrolling.native.setValue(1);
       this.isAutoscrolling.js = true;
 
-      if (offset > width) {
-        this.scroll({ offset });
-      }
+      this.offset = offset;
+
+      cond(
+        eq(this.spacerIndex, 0),
+        call([], this.scroll),
+        call([], this.notScroll)
+      );
+
+      // this.scroll({ offset });
     });
 
-  scroll = ({ offset }: { offset: number }) => {
+  notScroll = () => {
+    console.log("this.spacerIndex = 0");
+  };
+
+  scroll = () => {
     const flatlistRef = this.flatlistRef.current;
 
-    console.log("offset", offset);
+    console.log("offset", this.offset);
 
-    if (flatlistRef) flatlistRef.getNode().scrollToOffset({ offset });
+    if (flatlistRef)
+      flatlistRef.getNode().scrollToOffset({ offset: this.offset });
   };
 
   getScrollTargetOffset = (
