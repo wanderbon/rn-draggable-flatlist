@@ -1125,8 +1125,8 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
                   this.spacerIndex,
                   cond(
                     or(eq(this.spacerIndex, 1), eq(this.spacerIndex, -1)),
-                    call([this.spacerIndex], this.activateScroll),
-                    call([this.spacerIndex], this.unactivateScroll)
+                    call([this.spacerIndex], this.unactivateScroll),
+                    call([this.spacerIndex], this.activateScroll)
                   )
                 )
               ])
