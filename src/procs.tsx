@@ -1,4 +1,4 @@
-import Animated from "react-native-reanimated";
+import Animated, { call } from "react-native-reanimated";
 
 let {
   or,
@@ -162,15 +162,21 @@ export const setupCell = (proc as RetypedProc)(
           cond(
             cond(
               isAfterActive,
-              lessOrEq(currentIndex, spacerIndex),
-              greaterOrEq(currentIndex, spacerIndex)
+              [
+                lessOrEq(currentIndex, spacerIndex),
+                call([100, lessOrEq(currentIndex, spacerIndex)], console.log)
+              ],
+              [
+                greaterOrEq(currentIndex, spacerIndex),
+                call([101, greaterOrEq(currentIndex, spacerIndex)], console.log)
+              ]
             ),
             cond(
               isHovering,
               cond(isAfterActive, multiply(activeCellSize, -1), activeCellSize),
-              1
+              0
             ),
-            1
+            0
           )
         )
       ),
