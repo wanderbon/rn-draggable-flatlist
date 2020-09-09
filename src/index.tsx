@@ -722,17 +722,19 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
         const scrollingDownAtBottom = !!(
           isScrolledDown && targetOffset >= scrollOffset
         );
+
+        const isBlockUpScroll = !!isScrolledUp && spacerIndex === 1;
+
         shouldScroll =
           targetOffset >= 0 &&
           this.isPressedIn.js &&
           !scrollingUpAtTop &&
-          !scrollingDownAtBottom;
+          !scrollingDownAtBottom &&
+          !isBlockUpScroll;
 
-        console.log(spacerIndex, isScrolledUp);
+        console.log(spacerIndex, isBlockUpScroll, isBlockUpScroll);
 
-        const isBlockUpScroll = !!scrollingUpAtTop && spacerIndex === 1;
-
-        if (shouldScroll && !isBlockUpScroll) {
+        if (shouldScroll) {
           curParams = await this.scrollToAsync(targetOffset);
         }
       }
