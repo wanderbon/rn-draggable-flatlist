@@ -644,25 +644,12 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
 
   scrollToAsync = (offset: number): Promise<readonly number[]> =>
     new Promise((resolve, reject) => {
-      const { activeKey } = this.state;
-      const data = this.cellData.get(activeKey || "");
-
-      const cellSize = data?.measurements?.size ?? 1;
-      const cellOffset = data?.measurements?.offset ?? 1;
-      const currentIndex = data?.currentIndex ?? 1;
-
-      // const stopOffset =
-
-      // console.log(cellSize, offset, offset >= (cellSize || 0) / 2);
-
-      // if (cellSize && offset >= cellSize / 2) {
       this.resolveAutoscroll = resolve;
       this.targetScrollOffset.setValue(offset);
       this.isAutoscrolling.native.setValue(1);
       this.isAutoscrolling.js = true;
 
       this.scroll(offset);
-      // }
     });
 
   scroll = (offset: number) => {
