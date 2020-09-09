@@ -183,18 +183,16 @@ export const setupCell = (proc as RetypedProc)(
         and(
           isHovering,
           eq(spacerIndex, currentIndex),
-          lessOrEq(scrollOffset, activeCellSize)
+          not(lessOrEq(scrollOffset, activeCellSize))
         ),
-        [
-          set(
-            hoverTo,
-            sub(
-              offset,
-              scrollOffset,
-              cond(isAfterActive, sub(activeCellSize, size)) // Account for cells of differing size
-            )
+        set(
+          hoverTo,
+          sub(
+            offset,
+            scrollOffset,
+            cond(isAfterActive, sub(activeCellSize, size)) // Account for cells of differing size
           )
-        ]
+        )
       ),
 
       set(toValue, translate),
