@@ -654,9 +654,9 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
       this.offset = offset;
 
       cond(
-        eq(this.spacerIndex, 0),
-        call([], this.scroll),
-        call([], this.notScroll)
+        this.isHovering,
+        [call([], this.scroll)],
+        [call([], this.notScroll)]
       );
 
       // this.scroll({ offset });
