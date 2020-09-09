@@ -383,7 +383,6 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   };
 
   endTimingAnimation = () => {
-    debugger;
     if (this.lastTimingAnimation !== "end") {
       this.lastTimingAnimation = "end";
 
