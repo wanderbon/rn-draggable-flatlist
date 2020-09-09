@@ -901,6 +901,8 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
             : styles.hoverComponentVertical,
           {
             opacity: this.hoverComponentOpacity,
+            borderWidth: 10,
+            borderColor: "red",
             transform: [
               {
                 [`translate${horizontal ? "X" : "Y"}`]: this
@@ -1018,11 +1020,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
           <Animated.View
             ref={ref}
             onLayout={onCellLayout}
-            style={
-              isActiveCell
-                ? { opacity: 0 }
-                : { borderWidth: 10, borderColor: "red" }
-            }
+            style={isActiveCell ? { opacity: 0 } : undefined}
           >
             {children}
           </Animated.View>
