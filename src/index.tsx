@@ -84,7 +84,8 @@ const defaultProps = {
   debug: false,
   localization: {},
   screenHeight: height,
-  scrollEventThrottle: 1
+  scrollEventThrottle: 1,
+  topOffset: 0
 };
 
 type DefaultProps = Readonly<typeof defaultProps>;
@@ -135,6 +136,7 @@ type Props<T> = Modify<
     localization?: any;
     screenHeight: number;
     scrollEventThrottle: number;
+    topOffset: number;
   } & Partial<DefaultProps>
 >;
 
@@ -912,7 +914,8 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
       horizontal,
       deleteItem,
       screenHeight,
-      localization
+      localization,
+      topOffset
     } = this.props;
     if (!this.cellData.get(key)) this.setCellData(key, index);
     const { onUnmount } = this.cellData.get(key) || {
@@ -934,6 +937,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
         localization={localization}
         screenHeight={screenHeight}
         draggablePanRef={this.panGestureHandlerRef}
+        topOffset={topOffset}
       />
     );
   };
@@ -1136,6 +1140,7 @@ type RowItemProps<T> = {
   localization: any;
   screenHeight: number;
   draggablePanRef: React.RefObject<PanGestureHandler>;
+  topOffset: number;
 };
 
 class RowItem<T> extends React.PureComponent<RowItemProps<T>> {
@@ -1227,7 +1232,8 @@ class RowItem<T> extends React.PureComponent<RowItemProps<T>> {
       keyToIndex,
       itemKey,
       horizontal,
-      draggablePanRef
+      draggablePanRef,
+      topOffset
     } = this.props;
 
     const index = keyToIndex.get(itemKey);
@@ -1249,7 +1255,8 @@ class RowItem<T> extends React.PureComponent<RowItemProps<T>> {
         collapsable={false}
         style={{
           opacity: 1,
-          flexDirection: horizontal ? "row" : "column"
+          flexDirection: horizontal ? "row" : "column",
+          marginTop: topOffset
         }}
       >
         <PanGestureHandler
