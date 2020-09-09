@@ -179,28 +179,16 @@ export const setupCell = (proc as RetypedProc)(
       ),
 
       // Set value hovering element will snap to once released
-      cond(
-        and(isHovering, eq(spacerIndex, currentIndex)),
-        cond(
-          not(lessOrEq(scrollOffset, activeCellSize)),
-          set(
-            hoverTo,
-            sub(
-              offset,
-              scrollOffset,
-              cond(isAfterActive, sub(activeCellSize, size)) // Account for cells of differing size
-            )
-          ),
-          set(
-            hoverTo,
-            sub(
-              offset,
-              activeCellSize,
-              cond(isAfterActive, sub(activeCellSize, size))
-            )
+      cond(and(isHovering, eq(spacerIndex, currentIndex)), [
+        set(
+          hoverTo,
+          sub(
+            offset,
+            scrollOffset,
+            cond(isAfterActive, sub(activeCellSize, size)) // Account for cells of differing size
           )
         )
-      ),
+      ]),
 
       set(toValue, translate),
       cond(and(isPressedIn, neq(translate, prevTrans)), [
