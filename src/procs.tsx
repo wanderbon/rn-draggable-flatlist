@@ -121,7 +121,10 @@ export const setupCell = (proc as RetypedProc)(
                   add(offset, divide(size, 2))
                 )
               ),
-              set(spacerIndex, sub(currentIndex, 1))
+              set(
+                spacerIndex,
+                cond(eq(sub(currentIndex, 1), 0), 1, sub(currentIndex, 1))
+              )
             ),
             cond(
               and(
