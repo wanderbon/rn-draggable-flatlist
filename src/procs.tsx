@@ -1,4 +1,4 @@
-import Animated, { call } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 
 let {
   or,
@@ -109,7 +109,7 @@ export const setupCell = (proc as RetypedProc)(
       // Determining spacer index is hard to visualize.
       // see diagram here: https://i.imgur.com/jRPf5t3.jpg
       cond(
-        isPressedIn,
+        and(isPressedIn, neq(currentIndex, 0)),
         cond(
           isAfterActive,
           [
@@ -162,14 +162,8 @@ export const setupCell = (proc as RetypedProc)(
           cond(
             cond(
               isAfterActive,
-              [
-                lessOrEq(currentIndex, spacerIndex),
-                call([100, lessOrEq(currentIndex, spacerIndex)], console.log)
-              ],
-              [
-                greaterOrEq(currentIndex, spacerIndex),
-                call([101, greaterOrEq(currentIndex, spacerIndex)], console.log)
-              ]
+              lessOrEq(currentIndex, spacerIndex),
+              greaterOrEq(currentIndex, spacerIndex)
             ),
             cond(
               isHovering,
@@ -183,7 +177,7 @@ export const setupCell = (proc as RetypedProc)(
 
       // Set value hovering element will snap to once released
       cond(
-        and(isHovering, eq(spacerIndex, currentIndex)),
+        and(isHovering, eq(spacerIndex, currentIndex), neq(currentIndex, 0)),
         set(
           hoverTo,
           sub(
