@@ -83,7 +83,8 @@ const defaultProps = {
   dragItemOverflow: false,
   debug: false,
   localization: {},
-  screenHeight: height
+  screenHeight: height,
+  scrollEventThrottle: 1
 };
 
 type DefaultProps = Readonly<typeof defaultProps>;
@@ -133,6 +134,7 @@ type Props<T> = Modify<
     deleteItem: (key: string) => void;
     localization?: any;
     screenHeight: number;
+    scrollEventThrottle: number;
   } & Partial<DefaultProps>
 >;
 
@@ -1035,7 +1037,8 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
       onScrollOffsetChange,
       renderPlaceholder,
       onPlaceholderIndexChange,
-      containerStyles
+      containerStyles,
+      scrollEventThrottle
     } = this.props;
 
     const { hoverComponent } = this.state;
@@ -1071,7 +1074,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
             extraData={this.state}
             keyExtractor={this.keyExtractor}
             onScroll={this.onScroll}
-            scrollEventThrottle={1}
+            scrollEventThrottle={scrollEventThrottle}
           />
           {!!hoverComponent && this.renderHoverComponent()}
           <Animated.Code>
@@ -1293,7 +1296,8 @@ class RowItem<T> extends React.PureComponent<RowItemProps<T>> {
 
 const styles = StyleSheet.create({
   flex: {
-    flex: 1
+    flex: 1,
+    opacity: 1
   },
   hoverComponentVertical: {
     position: "absolute",

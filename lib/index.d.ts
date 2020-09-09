@@ -15,6 +15,7 @@ declare const defaultProps: {
   debug: boolean;
   localization: {};
   screenHeight: number;
+  scrollEventThrottle: number;
 };
 declare type DefaultProps = Readonly<typeof defaultProps>;
 declare type AnimatedFlatListType<T> = {
@@ -56,6 +57,7 @@ declare type Props<T> = Modify<
     deleteItem: (key: string) => void;
     localization?: any;
     screenHeight: number;
+    scrollEventThrottle: number;
   } & Partial<DefaultProps>
 >;
 declare type State = {
@@ -387,6 +389,7 @@ declare class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     debug: boolean;
     localization: {};
     screenHeight: number;
+    scrollEventThrottle: number;
   };
   constructor(props: Props<T>);
   dataKeysHaveChanged: (a: T[], b: T[]) => boolean;
