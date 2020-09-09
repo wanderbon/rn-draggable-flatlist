@@ -328,11 +328,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     if (!prevState.activeKey && this.state.activeKey) {
       const index = this.keyToIndex.get(this.state.activeKey);
       if (index !== undefined) {
-        console.log("setSpacerIndexTo:", index);
         this.spacerIndex.setValue(index);
-        console.log("=", this.spacerIndex);
-        // @ts-ignore
-        console.log("==", this.spacerIndex._value);
         this.activeIndex.setValue(index);
         this.touchCellOffset.setValue(0);
         this.isPressedIn.native.setValue(1);
@@ -653,8 +649,10 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
       this.isAutoscrolling.native.setValue(1);
       this.isAutoscrolling.js = true;
 
-      // @ts-ignore: Unreachable code error for _value
-      console.log(this.spacerIndex._value);
+      // @ts-ignore: Unreachable code error for __getValue
+      console.log(this.spacerIndex.__getValue());
+      // @ts-ignore: Unreachable code error for __getValue
+      console.log(this.spacerIndex._getValue());
 
       this.scroll(offset);
     });
