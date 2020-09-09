@@ -121,14 +121,7 @@ export const setupCell = (proc as RetypedProc)(
                   add(offset, divide(size, 2))
                 )
               ),
-              set(
-                spacerIndex,
-                cond(
-                  eq(sub(currentIndex, 1), 0),
-                  currentIndex,
-                  sub(currentIndex, 1)
-                )
-              )
+              set(spacerIndex, sub(currentIndex, 1))
             ),
             cond(
               and(
@@ -162,25 +155,25 @@ export const setupCell = (proc as RetypedProc)(
 
       // Translate cell down if it is before active index and active cell has passed it.
       // Translate cell up if it is after the active index and active cell has passed it.
-      cond(
-        neq(currentIndex, activeIndex),
-        set(
-          translate,
-          cond(
-            cond(
-              isAfterActive,
-              lessOrEq(currentIndex, spacerIndex),
-              greaterOrEq(currentIndex, spacerIndex)
-            ),
-            cond(
-              isHovering,
-              cond(isAfterActive, multiply(activeCellSize, -1), activeCellSize),
-              0
-            ),
-            0
-          )
-        )
-      ),
+      // cond(
+      //   neq(currentIndex, activeIndex),
+      //   set(
+      //     translate,
+      //     cond(
+      //       cond(
+      //         isAfterActive,
+      //         lessOrEq(currentIndex, spacerIndex),
+      //         greaterOrEq(currentIndex, spacerIndex)
+      //       ),
+      //       cond(
+      //         isHovering,
+      //         cond(isAfterActive, multiply(activeCellSize, -1), activeCellSize),
+      //         0
+      //       ),
+      //       0
+      //     )
+      //   )
+      // ),
 
       // Set value hovering element will snap to once released
       cond(
