@@ -650,9 +650,11 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
       this.isAutoscrolling.js = true;
 
       // @ts-ignore: Unreachable code error for __getValue
-      console.log(this.spacerIndex.__getValue());
+      console.log("activeIndex", this.activeIndex.__getValue());
       // @ts-ignore: Unreachable code error for __getValue
-      console.log(this.spacerIndex._getValue());
+      console.log("activeCellSize", this.activeCellSize.__getValue());
+      // @ts-ignore: Unreachable code error for __getValue
+      console.log("isHovering", this.isHovering.__getValue());
 
       this.scroll(offset);
     });
