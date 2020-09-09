@@ -332,17 +332,14 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   };
 
   resetHoverState = () => {
-    if (this.lastTimingAnimation !== "resetHoverState") {
-      this.lastTimingAnimation = "resetHoverState";
-      this.activeIndex.setValue(-1);
-      this.spacerIndex.setValue(-1);
-      this.disabled.setValue(0);
-      if (this.state.hoverComponent !== null || this.state.activeKey !== null) {
-        this.setState({
-          hoverComponent: null,
-          activeKey: null
-        });
-      }
+    this.activeIndex.setValue(-1);
+    this.spacerIndex.setValue(-1);
+    this.disabled.setValue(0);
+    if (this.state.hoverComponent !== null || this.state.activeKey !== null) {
+      this.setState({
+        hoverComponent: null,
+        activeKey: null
+      });
     }
   };
 
@@ -386,6 +383,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   };
 
   endTimingAnimation = () => {
+    debugger;
     if (this.lastTimingAnimation !== "end") {
       this.lastTimingAnimation = "end";
 
