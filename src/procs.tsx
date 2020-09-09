@@ -1,4 +1,4 @@
-import Animated from "react-native-reanimated";
+import Animated, { call } from "react-native-reanimated";
 
 let {
   or,
@@ -179,8 +179,11 @@ export const setupCell = (proc as RetypedProc)(
       ),
 
       // Set value hovering element will snap to once released
-      cond(
-        and(isHovering, eq(spacerIndex, currentIndex)),
+      cond(and(isHovering, eq(spacerIndex, currentIndex)), [
+        call([offset], console.log),
+        call([new Value("------ OFFSET")], console.log),
+        call([scrollOffset], console.log),
+        call([new Value("------ SCROLL")], console.log),
         set(
           hoverTo,
           sub(
@@ -189,7 +192,7 @@ export const setupCell = (proc as RetypedProc)(
             cond(isAfterActive, sub(activeCellSize, size)) // Account for cells of differing size
           )
         )
-      ),
+      ]),
 
       set(toValue, translate),
       cond(and(isPressedIn, neq(translate, prevTrans)), [
