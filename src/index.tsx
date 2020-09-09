@@ -1241,10 +1241,6 @@ class RowItem<T> extends React.PureComponent<RowItemProps<T>> {
     let wrapperStyle: { opacity: number; width?: number; height?: number } = {
       opacity: 1
     };
-    if (horizontal && isActiveRow) wrapperStyle = { width: 0, opacity: 0 };
-    else if (!horizontal && isActiveRow) {
-      wrapperStyle = { height: 0, opacity: 0 };
-    }
 
     return (
       <View
