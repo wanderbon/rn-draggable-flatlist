@@ -6,7 +6,12 @@ import {
   findNodeHandle,
   ViewStyle,
   FlatList as RNFlatList,
-  NativeScrollEvent
+  NativeScrollEvent,
+  View,
+  Animated as RNAnimated,
+  Easing as RNEasing,
+  Alert,
+  Dimensions
 } from "react-native";
 import {
   PanGestureHandler,
@@ -21,6 +26,8 @@ import Animated, {
   Easing
 } from "react-native-reanimated";
 import { springFill, setupCell } from "./procs";
+
+const { height } = Dimensions.get("screen");
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
@@ -73,7 +80,10 @@ const defaultProps = {
   animationConfig: defaultAnimationConfig as Animated.SpringConfig,
   scrollEnabled: true,
   activationDistance: 0,
-  dragItemOverflow: false
+  dragItemOverflow: false,
+  debug: false,
+  localization: {},
+  screenHeight: height
 };
 
 type DefaultProps = Readonly<typeof defaultProps>;
@@ -96,7 +106,6 @@ export type RenderItemParams<T> = {
   index?: number; // This is technically a "last known index" since cells don't necessarily rerender when their index changes
   drag: () => void;
   isActive: boolean;
-  draggablePanRef: React.RefObject<PanGestureHandler>;
 };
 
 type Modify<T, R> = Omit<T, keyof R> & R;
@@ -121,7 +130,9 @@ type Props<T> = Modify<
     dragItemOverflow?: boolean;
     hoverComponentStyle?: object;
     containerStyles?: object;
-    refs: any;
+    deleteItem: (key: string) => void;
+    localization?: any;
+    screenHeight: number;
   } & Partial<DefaultProps>
 >;
 
@@ -894,11 +905,20 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   renderItem = ({ item, index }: { item: T; index: number }) => {
     const key = this.keyExtractor(item, index);
     if (index !== this.keyToIndex.get(key)) this.keyToIndex.set(key, index);
-    const { renderItem } = this.props;
+    const {
+      renderItem,
+      horizontal,
+      deleteItem,
+      screenHeight,
+      localization
+    } = this.props;
     if (!this.cellData.get(key)) this.setCellData(key, index);
     const { onUnmount } = this.cellData.get(key) || {
       onUnmount: () => console.log("## error, no cellData")
     };
+
+    const isActiveRow = index === this.keyToIndex.get(key);
+
     return (
       <RowItem
         extraData={this.props.extraData}
@@ -908,7 +928,12 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
         item={item}
         drag={this.drag}
         onUnmount={onUnmount}
-        draggablePanRef={this.panGestureHandlerRef}
+        horizontal={horizontal}
+        isActiveRow={isActiveRow}
+        itemProp={item}
+        deleteItem={deleteItem}
+        localization={localization}
+        screenHeight={screenHeight}
       />
     );
   };
@@ -1012,11 +1037,8 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
       onScrollOffsetChange,
       renderPlaceholder,
       onPlaceholderIndexChange,
-      containerStyles,
-      refs
+      containerStyles
     } = this.props;
-
-    const arrayOfRefs = Object.keys(refs).map(key => refs[key]);
 
     const { hoverComponent } = this.state;
     let dynamicProps = {};
@@ -1031,7 +1053,6 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
         ref={this.panGestureHandlerRef}
         onGestureEvent={this.onPanGestureEvent}
         onHandlerStateChange={this.onPanStateChange}
-        waitFor={[...arrayOfRefs]}
         {...dynamicProps}
       >
         <Animated.View
@@ -1108,26 +1129,33 @@ type RowItemProps<T> = {
   renderItem: (params: RenderItemParams<T>) => React.ReactNode;
   itemKey: string;
   onUnmount: () => void;
-  draggablePanRef: React.RefObject<PanGestureHandler>;
+  horizontal?: boolean | false;
+  isActiveRow: boolean;
+  deleteItem: (key: string) => void;
+  itemProp: any;
+  localization: any;
+  screenHeight: number;
 };
 
 class RowItem<T> extends React.PureComponent<RowItemProps<T>> {
+  _height: number;
+  _dragY: RNAnimated.AnimatedValue;
+
+  constructor(props: RowItemProps<T>) {
+    super(props);
+
+    this._height = 0;
+    this._dragY = new RNAnimated.Value(0);
+  }
+
   drag = () => {
-    const {
-      drag,
-      renderItem,
-      item,
-      keyToIndex,
-      itemKey,
-      draggablePanRef
-    } = this.props;
+    const { drag, renderItem, item, keyToIndex, itemKey } = this.props;
+
     const hoverComponent = renderItem({
       isActive: true,
       item,
       index: keyToIndex.get(itemKey),
-      drag: () =>
-        console.log("## attempt to call drag() on hovering component"),
-      draggablePanRef: draggablePanRef
+      drag: () => console.log("## attempt to call drag() on hovering component")
     });
 
     drag(hoverComponent, itemKey);
@@ -1137,21 +1165,134 @@ class RowItem<T> extends React.PureComponent<RowItemProps<T>> {
     this.props.onUnmount();
   }
 
+  _onLayout = (props: any) => {
+    const { nativeEvent } = props;
+
+    this._height = nativeEvent.layout.height;
+  };
+
+  _onPanStateChange = (props: any) => {
+    const { nativeEvent } = props;
+    const { keyToIndex, itemKey } = this.props;
+
+    const index = keyToIndex.get(itemKey);
+
+    if (index) {
+      if (
+        (nativeEvent.oldState === GestureState.ACTIVE &&
+          nativeEvent.state === GestureState.END) ||
+        nativeEvent.state === GestureState.FAILED
+      ) {
+        this._toogleSnapAnimate(nativeEvent.translationY <= -200);
+      }
+    }
+  };
+
+  _toogleSnapAnimate = (isDelete: boolean) => {
+    const { deleteItem, itemProp, localization, screenHeight } = this.props;
+
+    const isMediaCard =
+      itemProp.cardType === "video" || itemProp.cardType === "photo";
+
+    const isUploading =
+      isMediaCard &&
+      itemProp?.blocks[0]?.data?.localUri &&
+      ((itemProp.cardType === "photo" && !itemProp?.blocks[0]?.data?.src) ||
+        (itemProp.cardType === "video" && !itemProp?.blocks[0]?.data?.link)) &&
+      !itemProp?.blocks[0]?.data?.error;
+
+    RNAnimated.timing(this._dragY, {
+      duration: !isUploading && isDelete ? 100 : 300,
+      toValue:
+        !isUploading && isDelete ? (-screenHeight - this._height) / 2 : 0,
+      easing: RNEasing.linear,
+      useNativeDriver: true
+    }).start(() => {
+      if (isUploading) {
+        Alert.alert(
+          localization["delete_imposible"],
+          localization["media_not_load_yet"]
+        );
+      } else if (isDelete) {
+        deleteItem(itemProp.key);
+      }
+    });
+  };
+
   render() {
     const {
       renderItem,
       item,
       keyToIndex,
       itemKey,
-      draggablePanRef
+      horizontal,
+      isActiveRow
     } = this.props;
-    return renderItem({
+
+    const index = keyToIndex.get(itemKey);
+
+    const component = renderItem({
       isActive: false,
       item,
-      index: keyToIndex.get(itemKey),
-      drag: this.drag,
-      draggablePanRef: draggablePanRef
+      index,
+      drag: this.drag
     });
+
+    let wrapperStyle: { opacity: number; width?: number; height?: number } = {
+      opacity: 1
+    };
+    if (horizontal && isActiveRow) wrapperStyle = { width: 0, opacity: 0 };
+    else if (!horizontal && isActiveRow) {
+      wrapperStyle = { height: 0, opacity: 0 };
+    }
+
+    return (
+      <View
+        onLayout={this._onLayout}
+        collapsable={false}
+        style={{
+          opacity: 1,
+          flexDirection: horizontal ? "row" : "column"
+        }}
+      >
+        <PanGestureHandler
+          minDeltaY={50}
+          onGestureEvent={Animated.event(
+            [
+              {
+                nativeEvent: {
+                  translationX: new Animated.Value(0),
+                  translationY: index ? this._dragY : new Animated.Value(0)
+                }
+              }
+            ],
+            {
+              // listener: this._onGestureEvent,
+              useNativeDriver: true
+            }
+          )}
+          onHandlerStateChange={this._onPanStateChange}
+        >
+          <RNAnimated.View
+            style={[
+              wrapperStyle,
+              {
+                transform: [
+                  {
+                    translateX: 0
+                  },
+                  {
+                    translateY: this._dragY
+                  }
+                ]
+              }
+            ]}
+          >
+            {component}
+          </RNAnimated.View>
+        </PanGestureHandler>
+      </View>
+    );
   }
 }
 

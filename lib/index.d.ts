@@ -12,6 +12,9 @@ declare const defaultProps: {
   scrollEnabled: boolean;
   activationDistance: number;
   dragItemOverflow: boolean;
+  debug: boolean;
+  localization: {};
+  screenHeight: number;
 };
 declare type DefaultProps = Readonly<typeof defaultProps>;
 declare type AnimatedFlatListType<T> = {
@@ -27,7 +30,6 @@ export declare type RenderItemParams<T> = {
   index?: number;
   drag: () => void;
   isActive: boolean;
-  draggablePanRef: React.RefObject<PanGestureHandler>;
 };
 declare type Modify<T, R> = Omit<T, keyof R> & R;
 declare type Props<T> = Modify<
@@ -51,7 +53,9 @@ declare type Props<T> = Modify<
     dragItemOverflow?: boolean;
     hoverComponentStyle?: object;
     containerStyles?: object;
-    refs: any;
+    deleteItem: (key: string) => void;
+    localization?: any;
+    screenHeight: number;
   } & Partial<DefaultProps>
 >;
 declare type State = {
@@ -380,6 +384,9 @@ declare class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     scrollEnabled: boolean;
     activationDistance: number;
     dragItemOverflow: boolean;
+    debug: boolean;
+    localization: {};
+    screenHeight: number;
   };
   constructor(props: Props<T>);
   dataKeysHaveChanged: (a: T[], b: T[]) => boolean;
