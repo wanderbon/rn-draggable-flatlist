@@ -190,10 +190,14 @@ export const setupCell = (proc as RetypedProc)(
         call([new Value("------ SIZE")], console.log),
         set(
           hoverTo,
-          sub(
-            offset,
-            scrollOffset,
-            cond(isAfterActive, sub(activeCellSize, size)) // Account for cells of differing size
+          cond(
+            not(lessOrEq(scrollOffset, activeCellSize)),
+            sub(
+              offset,
+              scrollOffset,
+              cond(isAfterActive, sub(activeCellSize, size)) // Account for cells of differing size
+            ),
+            scrollOffset
           )
         )
       ]),
