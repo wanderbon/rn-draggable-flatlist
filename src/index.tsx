@@ -1083,7 +1083,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
           {!!renderPlaceholder && this.renderPlaceholder()}
           <AnimatedFlatList
             {...this.props}
-            CellRendererComponent={this.CellRendererComponent}
+            // CellRendererComponent={this.CellRendererComponent}
             ref={this.flatlistRef}
             onContentSizeChange={this.onListContentSizeChange}
             scrollEnabled={!hoverComponent && scrollEnabled}
