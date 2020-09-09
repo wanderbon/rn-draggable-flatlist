@@ -51,7 +51,7 @@ declare type Props<T> = Modify<
     dragItemOverflow?: boolean;
     hoverComponentStyle?: object;
     containerStyles?: object;
-    refs: object;
+    refs: any;
   } & Partial<DefaultProps>
 >;
 declare type State = {
