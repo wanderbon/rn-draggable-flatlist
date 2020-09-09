@@ -1133,8 +1133,8 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
                   )
                 ),
                 onChange(
-                  this.isScrolledUp,
-                  call([this.isScrolledUp], console.log)
+                  this.distToTopEdge,
+                  call([this.distToTopEdge, new Value(width)], console.log)
                 )
               ])
             }
