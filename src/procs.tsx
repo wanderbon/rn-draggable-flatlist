@@ -131,7 +131,7 @@ export const setupCell = (proc as RetypedProc)(
                 ),
                 lessThan(add(hoverOffset, activeCellSize), add(offset, size))
               ),
-              set(spacerIndex, currentIndex)
+              set(spacerIndex, cond(eq(currentIndex, 0), 1, currentIndex))
             )
           ],
           cond(lessThan(currentIndex, activeIndex), [
@@ -147,7 +147,7 @@ export const setupCell = (proc as RetypedProc)(
                 greaterOrEq(hoverOffset, offset),
                 lessThan(hoverOffset, add(offset, divide(size, 2)))
               ),
-              set(spacerIndex, currentIndex)
+              set(spacerIndex, cond(eq(currentIndex, 0), 1, currentIndex))
             )
           ])
         )
