@@ -659,17 +659,21 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
         [call([], this.notScroll)]
       );
 
-      // this.scroll({ offset });
+      this.scroll([1]);
     });
 
-  notScroll = () => {
-    console.log("this.spacerIndex = 0");
+  notScroll = (args: readonly number[]) => {
+    console.log("this.spacerIndex = 0", args);
   };
 
-  scroll = () => {
+  scroll = (args: readonly number[]) => {
     const flatlistRef = this.flatlistRef.current;
 
-    console.log("offset", this.offset);
+    if (args.length) {
+      console.log("offset args", this.offset, args);
+    } else {
+      console.log("offset", this.offset);
+    }
 
     if (flatlistRef)
       flatlistRef.getNode().scrollToOffset({ offset: this.offset });
