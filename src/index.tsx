@@ -1057,7 +1057,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
         {...dynamicProps}
       >
         <Animated.View
-          style={[styles.flex, containerStyles]}
+          style={containerStyles}
           ref={this.containerRef}
           onLayout={this.onContainerLayout}
           onTouchEnd={this.onContainerTouchEnd}
@@ -1295,10 +1295,6 @@ class RowItem<T> extends React.PureComponent<RowItemProps<T>> {
 }
 
 const styles = StyleSheet.create({
-  flex: {
-    flex: 1,
-    opacity: 1
-  },
   hoverComponentVertical: {
     position: "absolute",
     left: 0,
