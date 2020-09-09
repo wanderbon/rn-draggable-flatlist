@@ -1018,7 +1018,11 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
           <Animated.View
             ref={ref}
             onLayout={onCellLayout}
-            style={isActiveCell ? { opacity: 0 } : undefined}
+            style={
+              isActiveCell
+                ? { opacity: 0 }
+                : { borderWidth: 10, borderColor: "red" }
+            }
           >
             {children}
           </Animated.View>
