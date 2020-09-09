@@ -78,7 +78,6 @@ declare type CellData = {
 };
 declare class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   state: State;
-  offset: number;
   scale: Animated.Value<number>;
   lastTimingAnimation: string;
   containerRef: React.RefObject<Animated.View>;

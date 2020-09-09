@@ -170,8 +170,6 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     hoverComponent: null
   };
 
-  offset: number = 0;
-
   scale = new Animated.Value<number>(0);
   lastTimingAnimation = "";
 
@@ -651,10 +649,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
       this.isAutoscrolling.native.setValue(1);
       this.isAutoscrolling.js = true;
 
-      this.offset = offset;
-
-      console.log(this.spacerIndex);
-      debugger;
+      console.log(this.spacerIndex[" __value"]);
 
       this.scroll(offset);
     });
