@@ -51,6 +51,7 @@ declare type Props<T> = Modify<
     dragItemOverflow?: boolean;
     hoverComponentStyle?: object;
     containerStyles?: object;
+    refs: React.RefObject<PanGestureHandler>[];
   } & Partial<DefaultProps>
 >;
 declare type State = {

@@ -121,6 +121,7 @@ type Props<T> = Modify<
     dragItemOverflow?: boolean;
     hoverComponentStyle?: object;
     containerStyles?: object;
+    refs: React.RefObject<PanGestureHandler>[];
   } & Partial<DefaultProps>
 >;
 
@@ -1011,8 +1012,11 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
       onScrollOffsetChange,
       renderPlaceholder,
       onPlaceholderIndexChange,
-      containerStyles
+      containerStyles,
+      refs
     } = this.props;
+
+    console.log("refs", refs);
 
     const { hoverComponent } = this.state;
     let dynamicProps = {};
