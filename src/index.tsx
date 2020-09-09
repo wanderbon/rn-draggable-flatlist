@@ -771,15 +771,9 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     {
       nativeEvent: ({ contentOffset }: NativeScrollEvent) =>
         block([
-          cond(
-            greaterOrEq(
-              contentOffset[this.props.horizontal ? "x" : "y"],
-              this.activeCellSize
-            ),
-            set(
-              this.scrollOffset,
-              this.props.horizontal ? contentOffset.x : contentOffset.y
-            )
+          set(
+            this.scrollOffset,
+            this.props.horizontal ? contentOffset.x : contentOffset.y
           ),
           cond(
             and(
