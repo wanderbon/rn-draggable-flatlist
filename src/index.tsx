@@ -170,8 +170,6 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
     hoverComponent: null
   };
 
-  canScroll: boolean = false;
-
   scale = new Animated.Value<number>(0);
   lastTimingAnimation = "";
 
@@ -654,16 +652,6 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
       this.scroll(offset);
     });
 
-  activateScroll = (args: readonly number[]) => {
-    console.log("activateScroll", args[0]);
-    this.canScroll = true;
-  };
-
-  unactivateScroll = (args: readonly number[]) => {
-    console.log("unactivateScroll", args[0]);
-    this.canScroll = false;
-  };
-
   scroll = (offset: number) => {
     const flatlistRef = this.flatlistRef.current;
 
@@ -740,11 +728,11 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
           !scrollingUpAtTop &&
           !scrollingDownAtBottom;
 
-        console.log(spacerIndex, isScrolledUp, scrollingUpAtTop);
+        console.log(spacerIndex, isScrolledUp);
 
-        // const isBlockUpScroll = scrollingUpAtTop
+        const isBlockUpScroll = !!scrollingUpAtTop && spacerIndex === 1;
 
-        if (shouldScroll) {
+        if (shouldScroll && !isBlockUpScroll) {
           curParams = await this.scrollToAsync(targetOffset);
         }
       }
@@ -1125,19 +1113,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
                     this.resetHoverSpring,
                     set(this.hasMoved, 0)
                   ])
-                ]),
-                onChange(
-                  this.spacerIndex,
-                  cond(
-                    or(eq(this.spacerIndex, -1), eq(this.spacerIndex, 0)),
-                    call([this.spacerIndex], this.unactivateScroll),
-                    call([this.spacerIndex], this.activateScroll)
-                  )
-                ),
-                onChange(
-                  this.spacerIndex,
-                  call([this.spacerIndex], console.log)
-                )
+                ])
               ])
             }
           </Animated.Code>

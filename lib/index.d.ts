@@ -78,7 +78,6 @@ declare type CellData = {
 };
 declare class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   state: State;
-  canScroll: boolean;
   scale: Animated.Value<number>;
   lastTimingAnimation: string;
   containerRef: React.RefObject<Animated.View>;
@@ -413,8 +412,6 @@ declare class DraggableFlatList<T> extends React.Component<Props<T>, State> {
   resolveAutoscroll?: (scrollParams: readonly number[]) => void;
   onAutoscrollComplete: (params: readonly number[]) => void;
   scrollToAsync: (offset: number) => Promise<readonly number[]>;
-  activateScroll: (args: readonly number[]) => void;
-  unactivateScroll: (args: readonly number[]) => void;
   scroll: (offset: number) => void;
   getScrollTargetOffset: (
     distFromTop: number,
