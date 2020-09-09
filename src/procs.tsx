@@ -172,7 +172,8 @@ export const setupCell = (proc as RetypedProc)(
             ),
             0
           )
-        )
+        ),
+        set(translate, multiply(activeCellSize, -1))
       ),
 
       // Set value hovering element will snap to once released
@@ -210,13 +211,13 @@ export const setupCell = (proc as RetypedProc)(
       ]),
       runSpring,
       cond(finished, [onFinished, set(time, 0), set(finished, 0)]),
-      // cond(
-      //   eq(spacerIndex, currentIndex),
-      //   set(
-      //     placeholderOffset,
-      //     cond(isAfterActive, add(sub(offset, activeCellSize), size), offset)
-      //   )
-      // ),
+      cond(
+        eq(spacerIndex, currentIndex),
+        set(
+          placeholderOffset,
+          cond(isAfterActive, add(sub(offset, activeCellSize), size), offset)
+        )
+      ),
       position
     ])
 );
