@@ -184,6 +184,10 @@ export const setupCell = (proc as RetypedProc)(
         call([new Value("------ OFFSET")], console.log),
         call([scrollOffset], console.log),
         call([new Value("------ SCROLL")], console.log),
+        call([spacerIndex], console.log),
+        call([new Value("------ SPACER")], console.log),
+        call([currentIndex], console.log),
+        call([new Value("------ CURRENT")], console.log),
         set(
           hoverTo,
           sub(
