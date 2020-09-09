@@ -522,6 +522,8 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
       transform
     };
 
+    console.log("currentIndex", currentIndex);
+
     const cellData = {
       initialized,
       currentIndex,
