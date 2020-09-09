@@ -188,28 +188,28 @@ export const setupCell = (proc as RetypedProc)(
         )
       ),
 
-      // set(toValue, translate),
-      // cond(and(isPressedIn, neq(translate, prevTrans)), [
-      //   set(prevTrans, translate),
-      //   getOnChangeTranslate(
-      //     translate,
-      //     isAfterActive,
-      //     initialized,
-      //     toValue,
-      //     isPressedIn
-      //   ),
-      //   cond(hasMoved, onHasMoved, set(position, translate))
-      // ]),
-      // cond(neq(prevSpacerIndex, spacerIndex), [
-      //   set(prevSpacerIndex, spacerIndex),
-      //   cond(eq(spacerIndex, -1), [
-      //     // Hard reset to prevent stale state bugs
-      //     onChangeSpacerIndex,
-      //     hardReset(position, finished, time, toValue)
-      //   ])
-      // ]),
-      // runSpring,
-      // cond(finished, [onFinished, set(time, 0), set(finished, 0)]),
+      set(toValue, translate),
+      cond(and(isPressedIn, neq(translate, prevTrans)), [
+        set(prevTrans, translate),
+        getOnChangeTranslate(
+          translate,
+          isAfterActive,
+          initialized,
+          toValue,
+          isPressedIn
+        ),
+        cond(hasMoved, onHasMoved, set(position, translate))
+      ]),
+      cond(neq(prevSpacerIndex, spacerIndex), [
+        set(prevSpacerIndex, spacerIndex),
+        cond(eq(spacerIndex, -1), [
+          // Hard reset to prevent stale state bugs
+          onChangeSpacerIndex,
+          hardReset(position, finished, time, toValue)
+        ])
+      ]),
+      runSpring,
+      cond(finished, [onFinished, set(time, 0), set(finished, 0)]),
       // cond(
       //   eq(spacerIndex, currentIndex),
       //   set(
