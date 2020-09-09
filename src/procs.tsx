@@ -168,9 +168,9 @@ export const setupCell = (proc as RetypedProc)(
             cond(
               isHovering,
               cond(isAfterActive, multiply(activeCellSize, -1), activeCellSize),
-              0
+              1
             ),
-            0
+            1
           )
         )
       ),
