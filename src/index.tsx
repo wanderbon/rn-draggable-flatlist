@@ -649,7 +649,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
       this.isAutoscrolling.native.setValue(1);
       this.isAutoscrolling.js = true;
 
-      cond(eq(this.spacerIndex, 0), [call([new Value("yes")], console.log)]);
+      cond(eq(this.spacerIndex, -1), [call([new Value("yes")], console.log)]);
 
       if (this.spacerIndex !== new Value(-1)) {
         this.scroll({ offset });
