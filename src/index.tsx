@@ -1132,10 +1132,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
                     call([this.spacerIndex], this.activateScroll)
                   )
                 ),
-                onChange(
-                  this.distToTopEdge,
-                  call([this.distToTopEdge, new Value(width)], console.log)
-                )
+                onChange(this.hoverTo, call([this.hoverTo], console.log))
               ])
             }
           </Animated.Code>
