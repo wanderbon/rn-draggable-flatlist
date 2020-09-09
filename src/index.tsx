@@ -901,8 +901,6 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
             : styles.hoverComponentVertical,
           {
             opacity: this.hoverComponentOpacity,
-            borderWidth: 10,
-            borderColor: "red",
             transform: [
               {
                 [`translate${horizontal ? "X" : "Y"}`]: this
@@ -1115,8 +1113,12 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
                     set(this.hasMoved, 0)
                   ])
                 ]),
-                onChange(this.spacerIndex, [
-                  call([this.spacerIndex], console.log)
+                onChange(this.hoverComponentTranslate, [
+                  call([this.hoverComponentTranslate], console.log)
+                ]),
+                onChange(this.hoverTo, [
+                  call([this.hoverTo], console.log),
+                  call([new Value("----------")], console.log)
                 ])
               ])
             }
