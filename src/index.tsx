@@ -1114,11 +1114,12 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
                   ])
                 ]),
                 onChange(this.hoverComponentTranslate, [
-                  call([this.hoverComponentTranslate], console.log)
+                  call([this.hoverComponentTranslate], console.log),
+                  call([new Value("---------- TRANSLATE")], console.log)
                 ]),
                 onChange(this.hoverTo, [
                   call([this.hoverTo], console.log),
-                  call([new Value("----------")], console.log)
+                  call([new Value("---------- HOVER")], console.log)
                 ])
               ])
             }
