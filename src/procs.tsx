@@ -180,14 +180,6 @@ export const setupCell = (proc as RetypedProc)(
 
       // Set value hovering element will snap to once released
       cond(and(isHovering, eq(spacerIndex, currentIndex)), [
-        call([offset], console.log),
-        call([new Value("------ OFFSET")], console.log),
-        call([scrollOffset], console.log),
-        call([new Value("------ SCROLL")], console.log),
-        call([activeCellSize], console.log),
-        call([new Value("------ ACTIVE")], console.log),
-        call([size], console.log),
-        call([new Value("------ SIZE")], console.log),
         set(
           hoverTo,
           cond(
