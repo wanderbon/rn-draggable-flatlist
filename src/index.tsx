@@ -656,11 +656,13 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
       // @ts-ignore: Unreachable code error for __getValue
       console.log("isHovering", this.isHovering.__getValue());
 
+      cond(eq(this.spacerIndex, -1), [call([offset], this.notScroll)]);
+
       this.scroll(offset);
     });
 
   notScroll = (args: readonly number[]) => {
-    console.log("this.spacerIndex = 0", args);
+    console.log("this.spacerIndex = -1", args);
   };
 
   scroll = (offset: number) => {
