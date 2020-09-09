@@ -522,8 +522,6 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
       transform
     };
 
-    console.log("currentIndex", currentIndex);
-
     const cellData = {
       initialized,
       currentIndex,
@@ -1114,6 +1112,9 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
                     this.resetHoverSpring,
                     set(this.hasMoved, 0)
                   ])
+                ]),
+                onChange(this.spacerIndex, [
+                  call([this.spacerIndex], console.log)
                 ])
               ])
             }
