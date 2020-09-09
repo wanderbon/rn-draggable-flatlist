@@ -1266,9 +1266,7 @@ class RowItem<T> extends React.PureComponent<RowItemProps<T>> {
         collapsable={false}
         style={{
           opacity: 1,
-          flexDirection: horizontal ? "row" : "column",
-          borderWidth: 1,
-          borderColor: "red"
+          flexDirection: horizontal ? "row" : "column"
         }}
       >
         <PanGestureHandler
