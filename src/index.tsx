@@ -654,9 +654,9 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
       const cellSize = data?.measurements?.size;
       const cellOffset = data?.measurements?.offset;
 
-      console.log(cellSize, offset, offset >= (cellSize || 0));
+      console.log(cellSize, offset, offset >= (cellSize || 0) / 2);
 
-      if (cellSize && offset >= cellSize) {
+      if (cellSize && offset >= cellSize / 2) {
         this.scroll(offset);
       }
     });
