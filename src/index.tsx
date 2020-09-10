@@ -1115,13 +1115,6 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
                     this.resetHoverSpring,
                     set(this.hasMoved, 0)
                   ])
-                ]),
-                onChange(this.hoverAnimUnconstrained, [
-                  call(
-                    [new Value("--- hoverAnimUnconstrained ---")],
-                    console.log
-                  ),
-                  call([this.hoverAnimUnconstrained], console.log)
                 ])
               ])
             }
