@@ -949,6 +949,7 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
         localization={localization}
         screenHeight={screenHeight}
         draggablePanRef={this.panGestureHandlerRef}
+        activeIndex={this.activeIndex}
       />
     );
   };
@@ -1151,17 +1152,24 @@ type RowItemProps<T> = {
   localization: any;
   screenHeight: number;
   draggablePanRef: React.RefObject<PanGestureHandler>;
+  activeIndex: Animated.Value<number>;
 };
 
 class RowItem<T> extends React.PureComponent<RowItemProps<T>> {
   _height: number;
   _dragY: RNAnimated.AnimatedValue;
+  state: {
+    enabled: boolean;
+  };
 
   constructor(props: RowItemProps<T>) {
     super(props);
 
     this._height = 0;
     this._dragY = new RNAnimated.Value(0);
+    this.state = {
+      enabled: true
+    };
   }
 
   drag = () => {
@@ -1235,6 +1243,14 @@ class RowItem<T> extends React.PureComponent<RowItemProps<T>> {
     });
   };
 
+  toggleEnabled = (args: readonly number[]) => {
+    if (args[0] > -1) {
+      this.setState({ enabled: false });
+    } else {
+      this.setState({ enabled: true });
+    }
+  };
+
   render() {
     const {
       renderItem,
@@ -1242,7 +1258,8 @@ class RowItem<T> extends React.PureComponent<RowItemProps<T>> {
       keyToIndex,
       itemKey,
       horizontal,
-      draggablePanRef
+      draggablePanRef,
+      activeIndex
     } = this.props;
 
     const index = keyToIndex.get(itemKey);
@@ -1258,6 +1275,8 @@ class RowItem<T> extends React.PureComponent<RowItemProps<T>> {
       opacity: 1
     };
 
+    const { enabled } = this.state;
+
     return (
       <View
         onLayout={this._onLayout}
@@ -1268,6 +1287,7 @@ class RowItem<T> extends React.PureComponent<RowItemProps<T>> {
         }}
       >
         <PanGestureHandler
+          enabled={enabled}
           minDeltaY={50}
           onGestureEvent={RNAnimated.event(
             [
@@ -1304,6 +1324,13 @@ class RowItem<T> extends React.PureComponent<RowItemProps<T>> {
             {component}
           </RNAnimated.View>
         </PanGestureHandler>
+        <Animated.Code>
+          {() =>
+            block([
+              onChange(activeIndex, call([activeIndex], this.toggleEnabled))
+            ])
+          }
+        </Animated.Code>
       </View>
     );
   }
