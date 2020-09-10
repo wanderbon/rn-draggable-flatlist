@@ -901,7 +901,6 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
             : styles.hoverComponentVertical,
           {
             opacity: this.hoverComponentOpacity,
-            borderWidth: 10,
             transform: [
               {
                 [`translate${horizontal ? "X" : "Y"}`]: this
