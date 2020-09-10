@@ -1113,7 +1113,8 @@ class DraggableFlatList<T> extends React.Component<Props<T>, State> {
                     this.resetHoverSpring,
                     set(this.hasMoved, 0)
                   ])
-                ])
+                ]),
+                onChange(this.scale, call([this.scale], console.log))
               ])
             }
           </Animated.Code>
